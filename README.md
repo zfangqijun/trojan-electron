@@ -1,1 +1,1 @@
-# trojan-gui
+# trojan-electron

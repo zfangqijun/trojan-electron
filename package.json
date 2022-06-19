@@ -1,6 +1,6 @@
 {
-  "name": "trojan-gui",
-  "productName": "trojan-gui",
+  "name": "trojan-electron",
+  "productName": "trojan-electron",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/main",

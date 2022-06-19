@@ -9,8 +9,8 @@ packager({
     icon: 'resource/static/icon.icns',
 }).then((result) => {
     console.log('package out: ', result)
-    const dir = path.resolve(__dirname, ...result, 'trojan-gui.app')
-    const out = path.resolve(__dirname, 'out', 'trojan-gui.zip')
+    const dir = path.resolve(__dirname, ...result, 'trojan-electron.app')
+    const out = path.resolve(__dirname, 'out', 'trojan-electron.zip')
 
     zip({ dir, out }, (err, res) => {
         if (err) {

@@ -58,6 +58,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           tag: ${{ env.TAG_NAME }}
-          file: ./out/trojan-gui.zip
+          file: ./out/trojan-electron.zip
           file_glob: true
           prerelease: true
