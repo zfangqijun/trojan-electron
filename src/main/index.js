@@ -11,10 +11,10 @@ app.on('ready', async () => {
     app.exit();
   }
   else {
-    // process.on('uncaughtException', (error) => {
-    //   notification.show({ title: 'Error', body: error.message })
-    //   Elog.error('uncaughtException', error)
-    // });
+    process.on('uncaughtException', (error) => {
+      notification.show({ title: 'Error', body: error.message })
+      Elog.error('uncaughtException', error)
+    });
 
     Elog.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
     Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
