@@ -1,8 +1,8 @@
 # trojan-electron
 
-## 简介
+基于 [**Electron**](https://github.com/electron/electron) 开发的 [**Trojan Go**](https://github.com/p4gefau1t/trojan-go) 跨平台客户端
 
-基于 [Electron](https://github.com/electron/electron)、[Trojan-Go](https://github.com/p4gefau1t/trojan-go) 开发的 Trojan 跨平台客户端
+**_该应用正在开发中，迭代过程中，所有的功能会存在较大变动_**
 
 ![Image Text](https://github.com/zfangqijun/github-assets/raw/main/trojan-electron/main-page.png)
 
@@ -26,4 +26,4 @@ https://raw.github.com/zfangqijun/repositpry/master/github-assets/trojan-electro
 
 ## 跨平台支持
 
-目前仅支持了macOS，短期内没有精力兼容其他系统，欢迎你的PR
+目前仅支持了macOS，欢迎您的PR
