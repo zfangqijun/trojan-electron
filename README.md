@@ -1,4 +1,4 @@
-# trojan-electron
+# Trojan-Electron
 
 基于 [**Electron**](https://github.com/electron/electron) 开发的 [**Trojan Go**](https://github.com/p4gefau1t/trojan-go) 跨平台客户端
 
