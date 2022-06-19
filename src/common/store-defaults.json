@@ -1,0 +1,39 @@
+{
+    "proxyNode": {
+        "current": null,
+        "list": []
+    },
+    "systemProxy": {
+        "enable": false,
+        "web": {
+            "enable": false
+        },
+        "secureWeb": {
+            "enable": false
+        },
+        "socks": {
+            "enable": true
+        },
+        "pac": {
+            "enable": false
+        }
+    },
+    "settings": {
+        "router": {
+            "enabled": true,
+            "modes": [
+                {
+                    "name": "default",
+                    "label": "默认",
+                    "bypassText": "geosite:private\ngeoip:private",
+                    "proxyText": "geosite:gfw",
+                    "blockText": "",
+                    "defaultPolicy": "bypass",
+                    "domainStrategy": "as_is",
+                    "geoip": "geoip-only-cn-private.dat",
+                    "geosite": "geosite+.dat"
+                }
+            ]
+        }
+    }
+}

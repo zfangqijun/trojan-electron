@@ -1,0 +1,258 @@
+{
+  "proxyNode": {
+    "type": "object",
+    "properties": {
+      "current": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "list": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "config": {
+              "type": "object",
+              "properties": {
+                "run_type": {
+                  "type": "string"
+                },
+                "local_addr": {
+                  "type": "string"
+                },
+                "local_port": {
+                  "type": "number"
+                },
+                "remote_addr": {
+                  "type": "string"
+                },
+                "remote_port": {
+                  "type": "number"
+                },
+                "log_level": {
+                  "type": "number"
+                },
+                "password": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "websocket": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "host": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "shadowsocks": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "ssl": {
+                  "type": "object",
+                  "properties": {
+                    "sni": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "mux": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "api": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "api_addr": {
+                      "type": "string"
+                    },
+                    "api_port": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "router": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "bypass": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "block": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "proxy": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "default_policy": {
+                      "type": "string"
+                    },
+                    "domain_strategy": {
+                      "type": "string"
+                    },
+                    "geoip": {
+                      "type": "string"
+                    },
+                    "geosite": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "uuid",
+            "type",
+            "name",
+            "config"
+          ]
+        }
+      }
+    }
+  },
+  "systemProxy": {
+    "type": "object",
+    "properties": {
+      "enable": {
+        "type": "boolean"
+      },
+      "web": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "secureWeb": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "socks": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "pac": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "type": "object",
+    "properties": {
+      "router": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "modes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "bypassText": {
+                  "type": "string"
+                },
+                "proxyText": {
+                  "type": "string"
+                },
+                "blockText": {
+                  "type": "string"
+                },
+                "defaultPolicy": {
+                  "type": "string"
+                },
+                "domainStrategy": {
+                  "type": "string"
+                },
+                "geoip": {
+                  "type": "string"
+                },
+                "geosite": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "label",
+                "bypassText",
+                "proxyText",
+                "blockText",
+                "defaultPolicy",
+                "domainStrategy",
+                "geoip",
+                "geosite"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+name: release-build
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+          
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+
+      
+      - name: Checkout tag
+        run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          tag_name="${GITHUB_REF##*/}"
+          echo Tag $tag_name
+          git checkout $tag_name
+          echo "TAG_NAME=${tag_name}" >> $GITHUB_ENV
+      
+
+      - name: Download trojan-go bin
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: p4gefau1t/trojan-go
+          latest: true
+          fileName: trojan-go-darwin-amd64.zip
+          out-file-path: ./downloads
+      
+      - run: unzip -d ./downloads ./downloads/trojan-go-darwin-amd64.zip
+      - run: cp ./downloads/trojan-go ./resource/trojan
+
+
+      - name: Install Node.js deps
+        run: pnpm i
+
+      
+      - name: Package
+        run: pnpm package
+        
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          tag: ${{ env.TAG_NAME }}
+          file: ./out/trojan-gui.zip
+          file_glob: true
+          prerelease: true

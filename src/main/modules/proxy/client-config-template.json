@@ -1,0 +1,44 @@
+{
+    "run_type": "client",
+    "local_addr": "127.0.0.1",
+    "local_port": 2188,
+    "remote_addr": "your_host",
+    "remote_port": 3000,
+    "log_level": 0,
+    "password": [
+        "your_password"
+    ],
+    "websocket": {
+        "enabled": false,
+        "host": "",
+        "path": ""
+    },
+    "shadowsocks": {
+        "enabled": false,
+        "method": "",
+        "password": ""
+    },
+    "ssl": {
+        "sni": ""
+    },
+    "mux": {
+        "enabled": false,
+        "concurrency": 8,
+        "idle_timeout": 10000
+    },
+    "api": {
+        "enabled": true,
+        "api_addr": "127.0.0.1",
+        "api_port": 2170
+    },
+    "router": {
+        "enabled": false,
+        "bypass": [],
+        "block": [],
+        "proxy": [],
+        "default_policy": "bypass",
+        "domain_strategy": "as_is",
+        "geoip": "geoip.dat",
+        "geosite": "geosite.dat"
+    }
+}
