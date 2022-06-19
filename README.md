@@ -22,8 +22,6 @@ pnpm i
 pnpm start
 ```
 
-https://raw.github.com/zfangqijun/repositpry/master/github-assets/trojan-electron/main-page.png
-
 ## 跨平台支持
 
 目前仅支持了macOS，欢迎您的PR
