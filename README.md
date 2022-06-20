@@ -1,4 +1,4 @@
-# Trojan-Electron
+# Trojan-Electron [![CodeQL](https://github.com/zfangqijun/trojan-electron/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/zfangqijun/trojan-electron/actions/workflows/codeql-analysis.yml)
 
 基于 [**Electron**](https://github.com/electron/electron) 开发的 [**Trojan Go**](https://github.com/p4gefau1t/trojan-go) 跨平台客户端
 
