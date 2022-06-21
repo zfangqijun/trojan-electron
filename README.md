@@ -1,8 +1,10 @@
 # Trojan-Electron [![CodeQL](https://github.com/zfangqijun/trojan-electron/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/zfangqijun/trojan-electron/actions/workflows/codeql-analysis.yml)
 
+> **注意:** 使用本软件时，请遵守中国法律、法规
+
 基于 [**Electron**](https://github.com/electron/electron) 开发的 [**Trojan Go**](https://github.com/p4gefau1t/trojan-go) 跨平台客户端
 
-**_该应用正在开发中，迭代过程中，所有的功能会存在较大变动_**
+**_该应用正在开发中，所有的功能均为不稳定状态，均可能出现较大改动_**
 
 ![Image Text](https://github.com/zfangqijun/github-assets/raw/main/trojan-electron/main-page.png)
 
@@ -24,4 +26,4 @@ pnpm start
 
 ## 跨平台支持
 
-目前仅支持了macOS，欢迎您的PR
+目前仅支持了macOS
