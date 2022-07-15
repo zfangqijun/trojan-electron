@@ -3,6 +3,10 @@ const { app } = require('electron');
 const Elog = require('electron-log');
 const notification = require('./notification/notification')
 
+global.crypto = {
+  getRandomValues: require('get-random-values')
+}
+
 app.on('ready', async () => {
   if (require('electron-squirrel-startup')) {
     app.exit();
@@ -18,6 +22,7 @@ app.on('ready', async () => {
 
     Elog.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
     Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
+
     await require('./start')(app);
   }
 })
