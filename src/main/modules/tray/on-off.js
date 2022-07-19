@@ -15,10 +15,10 @@ module.exports = function onOff() {
 
                 if (checked) {
                     await networksetup.enableSystemProxys(systemProxy)
-                    notification.show({ body: '系统代理已开启' })
+                    // notification.show({ body: '系统代理已开启' })
                 } else {
                     await networksetup.disableSystemProxys(systemProxy)
-                    notification.show({ body: '系统代理已关闭' })
+                    // notification.show({ body: '系统代理已关闭' })
                 }
 
                 store.setSystemProxyEnable(checked)

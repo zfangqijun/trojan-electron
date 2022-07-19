@@ -14,8 +14,7 @@ module.exports = async function (app) {
     await rpc.start();
 
     const systemProxy = store.getSystemProxy();
-    const uuid = store.getCurrentNode()
-    const currentNode = store.getNodeByUUID(uuid);
+    const currentNode = store.getCurrentNode();
 
     if (currentNode) {
         await Trojan.start(currentNode.config);

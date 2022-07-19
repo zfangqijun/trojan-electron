@@ -106,7 +106,11 @@ const [getNodeList, setNodeList] = define('proxyNode.list')
 /**
  * @type {DefineTuple<string>}
  */
-const [getCurrentNode, setCurrentNode] = define('proxyNode.current')
+const [getCurrentNodeUUID, setCurrentNodeUUID] = define('proxyNode.current')
+
+function getCurrentNode(){
+    return getNodeByUUID(getCurrentNodeUUID())
+}
 
 /**
  * 
@@ -212,8 +216,9 @@ module.exports = {
 
     getNodeList,
     setNodeList,
+    getCurrentNodeUUID,
+    setCurrentNodeUUID,
     getCurrentNode,
-    setCurrentNode,
 
     appendNode,
     setNodeByUUID,

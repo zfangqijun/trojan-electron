@@ -23,6 +23,7 @@
     "@ant-design/icons": "^4.7.0",
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.6.9",
+    "@iarna/toml": "^2.2.5",
     "@react-hook/throttle": "^2.2.0",
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.20.1",

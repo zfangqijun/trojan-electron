@@ -9,14 +9,14 @@ module.exports = function (render) {
             new MenuItem({
                 type: 'checkbox',
                 label: `${name} (${config.remote_addr}:${config.remote_port})`,
-                checked: uuid === store.getCurrentNode(),
+                checked: uuid === store.getCurrentNodeUUID(),
                 click: function () {
-                    if (uuid === store.getCurrentNode()) {
-                        store.setCurrentNode(null);
+                    if (uuid === store.getCurrentNodeUUID()) {
+                        store.setCurrentNodeUUID(null);
                         Trojan.stop();
                     } else {
                         const node = store.getNodeByUUID(uuid);
-                        store.setCurrentNode(uuid);
+                        store.setCurrentNodeUUID(uuid);
                         Trojan.restart(node.config);
                     }
                     render()
