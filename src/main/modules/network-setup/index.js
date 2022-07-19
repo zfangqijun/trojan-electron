@@ -1,1 +1,1 @@
-module.exports = require('./network-setup');
+module.exports = require('../../network-setup');
