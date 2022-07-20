@@ -14,7 +14,7 @@ const notification = require('../../notification/notification')
 const GlobalObserver = require('../../observer/observer');
 const Elog = require('../../elog')('Trojan')
 const Paths = require('../../paths');
-const ports = require('../../ports');
+const ports = require('../ports');
 const { delay } = require('../../util');
 
 

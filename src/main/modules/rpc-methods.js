@@ -1,7 +1,7 @@
-const store = require('../store');
-const tray = require('../tray');
-const { Trojan, createProxyNode } = require('../proxy')
-const networksetup = require('../network-setup')
+const store = require('./store');
+const tray = require('./tray');
+const { Trojan, createProxyNode } = require('./proxy')
+const networksetup = require('./network-setup')
 
 module.exports = {
     async trayRender() {
