@@ -5,17 +5,16 @@ class BaseModule extends EventEmitter {
 
     constructor() {
         super();
-
-        this.log = (...args) => {
-            this.emit('log', ...args);
-        }
-
         this.log.error = (...args) => {
             this.emit('log/error', ...args);
         }
     }
 
-    invoke = (methodPath, ...args) => {
+    log(...args) {
+        this.emit('log', ...args);
+    }
+
+    invoke(methodPath, ...args) {
         this.log('invoke', methodPath, args);
 
         const [moduleName, methodName] = methodPath.split('.');

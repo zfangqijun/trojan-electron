@@ -18,7 +18,7 @@ export default function SystemProxySection() {
 
             await invoke('setSystemProxyByName', name, { enable: newEnableValue })
             await invoke('enableSystemProxy', name, newEnableValue)
-            await invoke('trayRender');
+            await invoke('trayUpdate');
 
             notification.success({ message: newEnableValue })
 
@@ -38,7 +38,7 @@ export default function SystemProxySection() {
                 await invoke('disableSystemProxys')
                 notification.info({ message: '系统代理关闭' })
             }
-            await invoke('trayRender');
+            await invoke('trayUpdate');
 
         } catch (error) {
             notification.error({ message: String(error) })

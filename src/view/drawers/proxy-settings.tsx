@@ -109,7 +109,7 @@ function ProxySettings() {
                     config
                 }
 
-                await invoke('newNode', node);
+                await invoke('appendNode', node);
                 hideDrawer();
                 notification.success({ message: `新增成功` })
             } else {

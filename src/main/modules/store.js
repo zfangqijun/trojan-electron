@@ -14,7 +14,7 @@ class Store extends BaseModule {
          * @type {ElectronStoreState}
          */
         defaults: require('../../common/store-defaults.json'),
-        schema: require('./store/schema.json'),
+        schema: require('../../common/schema.json'),
     });
 
     init = () => {
@@ -137,21 +137,6 @@ class Store extends BaseModule {
 
     /**
      * 
-     * @param {SystemProxyName} name 
-     * @param {SystemProxyOption} option 
-     */
-    setSystemProxyByName = (name, option) => {
-        if (name === 'pac') this.setSystemProxyPac(option)
-
-        if (name === 'web') this.setSystemProxyWeb(option)
-
-        if (name === 'secureWeb') this.setSystemProxySecureWeb(option)
-
-        if (name === 'socks') this.setSystemProxySocks(option)
-    }
-
-    /**
-     * 
      * @param {string} uuid 
      * @returns {ProxyNode}
      */
@@ -173,28 +158,6 @@ class Store extends BaseModule {
      */
     appendNode = (node) => {
         this.setNodeList(this.getNodeList().concat(node))
-    }
-
-    /**
-     * 
-     * @param {string} uuid 
-     * @param {ProxyNode} node 
-     */
-    setNodeByUUID = (uuid, node) => {
-        this.setNodeList(this.getNodeList().map(R.when(R.propEq('uuid', uuid), () => node)))
-    }
-
-    /**
-     * 
-     * @param {string} uuid 
-     */
-    removeNodeByUUID = (uuid) => {
-        this.setNodeList(
-            R.pipe(
-                R.map(R.when(R.propEq('uuid', uuid), () => null)),
-                R.reject(R.isNil)
-            )(this.getNodeList())
-        )
     }
 
     /**

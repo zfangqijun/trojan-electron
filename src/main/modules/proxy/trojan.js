@@ -71,7 +71,7 @@ class Trojan {
      * 
      * @param {TrojanConfig} config
      */
-    static restart = async (config) => {
+    static restart = async (config = Trojan.config) => {
         Elog.info('restart')
         await Trojan.stop();
         await Trojan.start(config);
