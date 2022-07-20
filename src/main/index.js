@@ -28,13 +28,17 @@ app.on('ready', async () => {
     const Store = require('./modules/store');
     const Ports = require('./modules/ports');
     const RPCServer = require('./modules/rpc-server');
+    const RpcMethods = require('./modules/rpc-methods');
     const TrayMenu = require('./modules/tray');
 
     await Dao.register(Ports);
     await Dao.register(NetworkSetup);
     await Dao.register(Store);
+    await Dao.register(RpcMethods);
     await Dao.register(RPCServer);
     await Dao.register(TrayMenu);
+
+    console.log(RpcMethods.getMethods())
 
     await require('./start')(app);
   }

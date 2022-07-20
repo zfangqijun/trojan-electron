@@ -1,65 +1,102 @@
 const store = require('./store');
-const tray = require('./tray');
 const { Trojan, createProxyNode } = require('./proxy')
-const networksetup = require('./network-setup')
+const networksetup = require('./network-setup');
+const BaseModule = require('../base-module');
+const R = require('ramda');
 
-module.exports = {
-    async trayRender() {
-        tray.render()
-    },
+class RPCMethods extends BaseModule {
+    name = 'RPCMethods';
 
-    async trojanRestart() {
-        Trojan.restart(Trojan.config)
-    },
+    getMethods = () => {
+        return R.pipe(
+            R.keys,
+            R.filter(R.propIs(Function, R.__, this)),
+            R.reject(R.equals('getMethods')),
+            R.map(R.prop(R.__, this)),
+        )(this)
+    }
 
-    async getTraffic() {
+    trayUpdate = async () => {
+        await this.invoke('Tary.update')
+    }
+
+    trojanRestart = async () => {
+        Trojan.restart();
+    }
+
+    getTraffic = async () => {
         return Trojan.getTraffic();
-    },
+    }
 
-    async getStoreData() {
-        return store.getStoreData();
-    },
+    getStoreData = async () => {
+        return this.invoke('Store.getStoreData');
+    }
 
-    async setNodeByUUID(uuid, node) {
-        store.setNodeByUUID(uuid, node)
-    },
+    /**
+     * 
+     * @param {string} uuid 
+     * @param {ProxyNode} node 
+     */
+    setNodeByUUID = async (uuid, node) => {
+        const nodeList = await this.invoke('Store.getNodeList');
+        const newNodeList = nodeList.map(R.when(R.propEq('uuid', uuid), () => node));
+        await this.invoke('Store.setNodeList', newNodeList);
+    }
 
-    async newNode(options) {
+    appendNode = async (options) => {
         const node = createProxyNode({
             name: options.name,
             config: Trojan.toConfigFromOptions(options.config)
         });
 
-        store.appendNode(node);
-    },
+        await this.invoke('Store.appendNode', node);
+    }
 
-    async removeNodeByUUID(uuid) {
-        store.removeNodeByUUID(uuid)
-    },
+    removeNodeByUUID = async (uuid) => {
+        const nodeList = await this.invoke('Store.getNodeList');
+        const newNodeList = R.pipe(
+            R.map(R.when(R.propEq('uuid', uuid), () => null)),
+            R.reject(R.isNil)
+        )(nodeList);
+        await this.invoke('Store.setNodeList', newNodeList);
+    }
 
-    async setSystemProxyEnable(enable) {
-        store.setSystemProxyEnable(enable)
-    },
+    setSystemProxyEnable = async (enable) => {
+        await this.invoke('Store.setSystemProxyEnable', enable)
+    }
 
-    async setSystemProxyByName(name, option) {
-        store.setSystemProxyByName(name, option)
-    },
+    /**
+     * 
+     * @param {SystemProxyName} name 
+     * @param {SystemProxyOption} option 
+     */
+    setSystemProxyByName = async (name, option) => {
+        if (name === 'pac') await this.invoke('Store.setSystemProxyPac', option)
 
-    async enableSystemProxy(option, enable) {
-        if (store.getSystemProxyEnable()) {
-            await networksetup.enableSystemProxy(option, enable)
+        if (name === 'web') await this.invoke('Store.setSystemProxyWeb', option)
+
+        if (name === 'secureWeb') await this.invoke('Store.setSystemProxySecureWeb', option)
+
+        if (name === 'socks') await this.invoke('Store.setSystemProxySocks', option)
+    }
+
+    enableSystemProxy = async (option, enable) => {
+        if (await this.invoke('Store.getSystemProxyEnable')) {
+            await this.invoke('NetworkSetup.enableSystemProxy', option, enable)
         }
-    },
+    }
 
-    async enableSystemProxys() {
-        await networksetup.enableSystemProxys(store.getSystemProxy())
-    },
+    enableSystemProxys = async () => {
+        await this.invoke('NetworkSetup.enableSystemProxys', await this.invoke('Store.getSystemProxy'))
+    }
 
-    async disableSystemProxys() {
-        await networksetup.disableSystemProxys(store.getSystemProxy())
-    },
+    disableSystemProxys = async () => {
+        await this.invoke('NetworkSetup.disableSystemProxys', await this.invoke('Store.getSystemProxy'))
+    }
 
-    async setRouterModeByName(name, newMode){
-        store.setRouterModeByName(name, newMode);
-    },
+    setRouterModeByName = async (name, newMode) => {
+        await this.invoke('Store.setRouterModeByName', name, newMode)
+    }
 }
+
+module.exports = new RPCMethods();

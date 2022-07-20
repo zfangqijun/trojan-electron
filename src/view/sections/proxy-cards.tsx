@@ -63,7 +63,7 @@ export default function ProxyCardsSection() {
                                         }
 
                                         await invoke('removeNodeByUUID', key)
-                                        await invoke('trayRender')
+                                        await invoke('trayUpdate')
                                         notification.success({ message: '代理服务重启成功' })
                                     }
                                     catch (error) {

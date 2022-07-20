@@ -47,6 +47,10 @@ class TrayMenu extends BaseModule {
         this.tray.setToolTip('Katana')
     }
 
+    update = () => {
+        return this.render();
+    }
+
     showWindow = () => {
         return new MenuItem({
             label: '显示窗口',
@@ -144,7 +148,7 @@ class TrayMenu extends BaseModule {
                                 await this.invoke('Store.setCurrentNodeUUID', uuid);
                                 Trojan.restart(node.config);
                             }
-                            this.render()
+                            this.update()
                         }
                     })
                 )
@@ -152,7 +156,7 @@ class TrayMenu extends BaseModule {
         )
     }
 
-    importFromURL = (render) => {
+    importFromURL = () => {
         return new MenuItem({
             type: 'normal',
             label: '从剪切板导入',
@@ -169,7 +173,7 @@ class TrayMenu extends BaseModule {
 
                     await this.invoke('Store.appendNode', node);
 
-                    this.render();
+                    this.update();
 
                     notification.show({ title: '导入代理配置', body: '导入成功' })
                 }
