@@ -61,7 +61,7 @@ class NetworkSetup extends BaseModule {
 
         const services = await this.getNetworkServiceNames();
 
-        const port = await this.invoke('Ports', 'getPort', 'proxy');
+        const port = await this.invoke('Ports.getPort', 'proxy');
 
         const servicesWithDomain = services.map(
             service => ({ service, domain: '127.0.0.1', port, state: enable ? 'on' : 'off' })
