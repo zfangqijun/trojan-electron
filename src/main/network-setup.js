@@ -1,11 +1,9 @@
 const R = require('ramda');
 const util = require('util');
-const EventEmitter = require('events');
-const ports = require('./ports')
 const exec = util.promisify(require('child_process').exec);
+const BaseModule = require('./base-module');
 
-
-class NetworkSetup extends EventEmitter {
+class NetworkSetup extends BaseModule {
     name = 'NetworkSetup';
 
     /**
@@ -13,8 +11,8 @@ class NetworkSetup extends EventEmitter {
      */
     cacheServiceNames = [];
 
-    init = async () => {
-
+    init = () => {
+        this.emit('log', 'Initializing network setup module');
     }
 
     /**
@@ -63,8 +61,10 @@ class NetworkSetup extends EventEmitter {
 
         const services = await this.getNetworkServiceNames();
 
+        const port = await this.invoke('Ports', 'getPort', 'proxy');
+
         const servicesWithDomain = services.map(
-            service => ({ service, domain: '127.0.0.1', port: ports.getPort('proxy'), state: enable ? 'on' : 'off' })
+            service => ({ service, domain: '127.0.0.1', port, state: enable ? 'on' : 'off' })
         );
 
         switch (option) {
