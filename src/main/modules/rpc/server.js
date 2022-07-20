@@ -4,68 +4,71 @@ const { RPC } = require('jsonrpcv2');
 const { createServer } = require('http')
 
 const methods = require('./methods');
-const Elog = require('../elog')('JSON RPC');
+const Elog = require('../../elog')('JSON RPC');
 const GlobalObserver = require('../../observer/observer');
-const { getPort } = require('../../ports');
+const ports = require('../../ports');
+const BaseModule = require('../../base-module');
+
+class RPCServer extends BaseModule {
+    name = 'RPCServer';
+
+    init = async () => {
+        this.emit('log', 'Initializing RPC server');
+
+        const server = createServer();
+        const io = new Server(server);
+
+        io.on('connection', (socket) => {
+            this.emit('log', 'Client connected', socket.id);
+
+            const rpc = new RPC();
+
+            socket.on('message', (message) => {
+                rpc.receive(message)
+            })
+
+            rpc.setTransmitter((message) => {
+                socket.send(message)
+            })
+
+            forEachObjIndexed((method, methodName) => {
+                rpc.expose(methodName, function (...args) {
+                    this.emit('log', 'Invoking method', methodName, ...args);
+                    return method.call(null, ...args).catch((error) => {
+                        this.emit('log/error', 'Error invoking method', methodName, ...args, error);
+                        throw { message: error.message }
+                    })
+                });
+            }, methods)
+
+            rpc.notify('ready');
+
+            GlobalObserver.on(GlobalObserver.Events.StoreChange, notifyStoreChange)
+
+            socket.on('disconnect', () => {
+                this.emit('log', 'Client disconnected', socket.id);
+                GlobalObserver.removeListener(GlobalObserver.Events.StoreChange, notifyStoreChange);
+
+                forEachObjIndexed((_, methodName) => {
+                    rpc.unexpose(methodName)
+                }, methods);
+            })
+
+            function notifyStoreChange(newValue) {
+                rpc.notify(GlobalObserver.Events.StoreChange, newValue)
+            }
+        });
 
 
-async function start() {
-    const server = createServer();
+        const port = await this.invoke('Ports', 'getPort', 'http');
 
-    const ioServer = new Server(server);
-
-    ioServer.on('connection', (socket) => {
-        Elog.log('connection', socket.id)
-
-        const rpc = new RPC();
-
-        socket.on('message', (message) => {
-            rpc.receive(message)
+        return new Promise(resolve => {
+            server.listen(port, () => {
+                this.emit('log', 'RPC server listening on port', port);
+                resolve();
+            })
         })
-
-        rpc.setTransmitter((message) => {
-            socket.send(message)
-        })
-
-        forEachObjIndexed((method, methodName) => {
-            rpc.expose(methodName, function (...args) {
-                // Elog.info(methodName, args);
-                return method.call(null, ...args).catch((error) => {
-                    Elog.error(methodName, error)
-                    throw { message: error.message }
-                })
-            });
-        }, methods)
-
-        rpc.notify('ready');
-
-        GlobalObserver.on(GlobalObserver.Events.StoreChange, notifyStoreChange)
-
-        socket.on('disconnect', () => {
-            Elog.log('disconnect', socket.id);
-
-            GlobalObserver.removeListener(GlobalObserver.Events.StoreChange, notifyStoreChange);
-
-            forEachObjIndexed((_, methodName) => {
-                rpc.unexpose(methodName)
-            }, methods);
-        })
-
-        function notifyStoreChange(newValue) {
-            rpc.notify(GlobalObserver.Events.StoreChange, newValue)
-        }
-    })
-
-    return new Promise(resolve => {
-        const port = getPort('http');
-
-        server.listen(port, () => {
-            Elog.info('listen:', port)
-            resolve();
-        })
-    })
-
-
+    }
 }
 
-module.exports = { start }
+module.exports = new RPCServer();

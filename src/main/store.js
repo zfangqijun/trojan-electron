@@ -2,43 +2,47 @@
 
 const R = require('ramda');
 const ElectronStore = require('electron-store');
-const GlobalObserver = require('./observer/observer')
+const GlobalObserver = require('./observer/observer');
+const BaseModule = require('./base-module');
 
-class Store extends ElectronStore {
-    constructor() {
-        super({
-            name: 'store',
-            accessPropertiesByDotNotation: true,
-            defaults: require('../common/store-defaults.json'),
-            schema: {
-                ...require('./modules/store/schema.json'),
-            }
-        });
+class Store extends BaseModule {
+    name = 'Store';
 
+    eStore = new ElectronStore({
+        name: 'store',
+        accessPropertiesByDotNotation: true,
+        defaults: require('../common/store-defaults.json'),
+        schema: {
+            ...require('./modules/store/schema.json'),
+        }
+    });
+
+    init = () => {
+        this.emit('log', 'Initializing store module');
         // this.onDidAnyChange((newValue) => {
         //     GlobalObserver.emit(GlobalObserver.Events.StoreChange, newValue)
         // })
     }
 
-    getSystemProxyEnable = this.get.bind(this, 'systemProxy.enable');
-    setSystemProxyEnable = this.set.bind(this, 'systemProxy.enable');
-    getSystemProxyWeb = this.get.bind(this, 'systemProxy.web');
-    setSystemProxyWeb = this.set.bind(this, 'systemProxy.web');
-    getSystemProxySecureWeb = this.get.bind(this, 'systemProxy.secureWeb');
-    setSystemProxySecureWeb = this.set.bind(this, 'systemProxy.secureWeb');
-    getSystemProxySocks = this.get.bind(this, 'systemProxy.socks');
-    setSystemProxySocks = this.set.bind(this, 'systemProxy.socks');
-    getSystemProxyPac = this.get.bind(this, 'systemProxy.pac');
-    setSystemProxyPac = this.set.bind(this, 'systemProxy.pac');
-    getSystemProxy = this.get.bind(this, 'systemProxy');
-    setSystemProxy = this.set.bind(this, 'systemProxy');
-    getNodeList = this.get.bind(this, 'proxyNode.list');
-    getCurrentNodeUUID = this.get.bind(this, 'proxyNode.current');
-    setCurrentNodeUUID = this.set.bind(this, 'proxyNode.current');
-    getRouter = this.get.bind(this, 'settings.router');
-    setRouter = this.set.bind(this, 'settings.router');
-    getRouterModes = this.get.bind(this, 'settings.router.modes');
-    setRouterModes = this.set.bind(this, 'settings.router.modes');
+    getSystemProxyEnable = this.eStore.get.bind(this.eStore, 'systemProxy.enable');
+    setSystemProxyEnable = this.eStore.set.bind(this.eStore, 'systemProxy.enable');
+    getSystemProxyWeb = this.eStore.get.bind(this.eStore, 'systemProxy.web');
+    setSystemProxyWeb = this.eStore.set.bind(this.eStore, 'systemProxy.web');
+    getSystemProxySecureWeb = this.eStore.get.bind(this.eStore, 'systemProxy.secureWeb');
+    setSystemProxySecureWeb = this.eStore.set.bind(this.eStore, 'systemProxy.secureWeb');
+    getSystemProxySocks = this.eStore.get.bind(this.eStore, 'systemProxy.socks');
+    setSystemProxySocks = this.eStore.set.bind(this.eStore, 'systemProxy.socks');
+    getSystemProxyPac = this.eStore.get.bind(this.eStore, 'systemProxy.pac');
+    setSystemProxyPac = this.eStore.set.bind(this.eStore, 'systemProxy.pac');
+    getSystemProxy = this.eStore.get.bind(this.eStore, 'systemProxy');
+    setSystemProxy = this.eStore.set.bind(this.eStore, 'systemProxy');
+    getNodeList = this.eStore.get.bind(this.eStore, 'proxyNode.list');
+    getCurrentNodeUUID = this.eStore.get.bind(this.eStore, 'proxyNode.current');
+    setCurrentNodeUUID = this.eStore.set.bind(this.eStore, 'proxyNode.current');
+    getRouter = this.eStore.get.bind(this.eStore, 'settings.router');
+    setRouter = this.eStore.set.bind(this.eStore, 'settings.router');
+    getRouterModes = this.eStore.get.bind(this.eStore, 'settings.router.modes');
+    setRouterModes = this.eStore.set.bind(this.eStore, 'settings.router.modes');
 
     setSystemProxyByName = (name, option) => {
         if (name === 'pac') this.setSystemProxyPac(option)
