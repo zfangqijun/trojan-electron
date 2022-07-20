@@ -1,7 +1,6 @@
 const tray = require('./modules/tray');
 const { Trojan } = require('./modules/proxy');
 const store = require('./modules/store');
-const rpc = require('./modules/rpc');
 const networksetup = require('./modules/network-setup')
 const ports = require('./ports');
 
@@ -10,9 +9,6 @@ const ports = require('./ports');
  * @param {import('electron').App} app 
  */
 module.exports = async function (app) {
-    await ports.find();
-    await rpc.start();
-
     const systemProxy = store.getSystemProxy();
     const currentNode = store.getCurrentNode();
 
