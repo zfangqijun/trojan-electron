@@ -28,11 +28,13 @@ app.on('ready', async () => {
     const Store = require('./store');
     const Ports = require('./ports');
     const RPCServer = require('./modules/rpc/server');
+    const TrayMenu = require('./modules/tray');
 
     await Dao.register(Ports);
     await Dao.register(NetworkSetup);
     await Dao.register(Store);
     await Dao.register(RPCServer);
+    await Dao.register(TrayMenu);
 
     await require('./start')(app);
   }
