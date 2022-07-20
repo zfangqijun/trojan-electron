@@ -23,12 +23,16 @@ app.on('ready', async () => {
     Elog.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
     Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
 
-    // const Dao = require('./dao');
-    // const NetworkSetup = require('./network-setup');
-    // const Store = require('./store');
+    const Dao = require('./dao');
+    const NetworkSetup = require('./network-setup');
+    const Store = require('./store');
+    const Ports = require('./ports');
+    const RPCServer = require('./modules/rpc/server');
 
-    // Dao.register(NetworkSetup);
-    // Dao.register(Store);
+    await Dao.register(Ports);
+    await Dao.register(NetworkSetup);
+    await Dao.register(Store);
+    await Dao.register(RPCServer);
 
     await require('./start')(app);
   }
