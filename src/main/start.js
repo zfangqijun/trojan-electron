@@ -2,7 +2,6 @@ const tray = require('./modules/tray');
 const { Trojan } = require('./modules/proxy');
 const store = require('./modules/store');
 const networksetup = require('./modules/network-setup')
-const ports = require('./ports');
 
 /**
  * 

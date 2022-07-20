@@ -1,6 +1,6 @@
 const R = require('ramda');
 const { getPortPromise } = require('portfinder');
-const BaseModule = require('./base-module');
+const BaseModule = require('../base-module');
 
 const defaults = {
     proxy: 2188,

@@ -3,20 +3,20 @@ const R = require('ramda');
 const fs = require('fs/promises');
 const path = require('path');
 
-const BaseModule = require('../../base-module');
+const BaseModule = require('../base-module');
 
-const WindowManager = require('../../window');
-const Paths = require('../../paths');
-const { Trojan } = require('../proxy');
+const WindowManager = require('../window');
+const Paths = require('../paths');
+const { Trojan } = require('./proxy');
 
 const {
     exportRouterModeByName,
     importRouterModeByName,
     exportCurrentNode,
     importCurrentNode
-} = require('../../toml');
+} = require('../toml');
 
-const notification = require('../../notification/notification');
+const notification = require('../notification/notification');
 
 class TrayMenu extends BaseModule {
     name = 'Tray';

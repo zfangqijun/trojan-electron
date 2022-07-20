@@ -3,11 +3,10 @@ const { Server } = require('socket.io');
 const { RPC } = require('jsonrpcv2');
 const { createServer } = require('http')
 
-const methods = require('./methods');
-const Elog = require('../../elog')('JSON RPC');
-const GlobalObserver = require('../../observer/observer');
-const ports = require('../../ports');
-const BaseModule = require('../../base-module');
+const methods = require('./rpc-methods');
+const Elog = require('../elog')('JSON RPC');
+const GlobalObserver = require('../observer/observer');
+const BaseModule = require('../base-module');
 
 class RPCServer extends BaseModule {
     name = 'RPCServer';
@@ -44,7 +43,7 @@ class RPCServer extends BaseModule {
         forEachObjIndexed((method, methodName) => {
             rpc.expose(methodName, (...args) => {
                 // return this.invoke(methodName, ...args);
-                this.log('Invoking method', methodName);
+                // this.log('Invoking method', methodName);
                 return method.call(null, ...args).catch((error) => {
                     this.log.error('Error invoking method', methodName, args, error);
                     throw { message: error.message }

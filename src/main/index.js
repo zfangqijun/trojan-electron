@@ -24,10 +24,10 @@ app.on('ready', async () => {
     Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
 
     const Dao = require('./dao');
-    const NetworkSetup = require('./network-setup');
-    const Store = require('./store');
-    const Ports = require('./ports');
-    const RPCServer = require('./modules/rpc/server');
+    const NetworkSetup = require('./modules/network-setup');
+    const Store = require('./modules/store');
+    const Ports = require('./modules/ports');
+    const RPCServer = require('./modules/rpc-server');
     const TrayMenu = require('./modules/tray');
 
     await Dao.register(Ports);
