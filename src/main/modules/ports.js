@@ -15,8 +15,6 @@ class Ports extends BaseModule {
   ports
 
   init = async () => {
-    this.emit('log', 'Initializing ports module')
-
     const proxy = await getPortPromise({
       port: defaults.proxy,
       stopPort: defaults.proxy + 10
@@ -37,6 +35,7 @@ class Ports extends BaseModule {
       proxyApi,
       http
     }
+    this.emit('log', 'Initializing ports module')
   }
 
   /**

@@ -67,7 +67,7 @@ class Trojan extends BaseModule {
   startApiClient = async () => {
     if (this.apiClientService) return
 
-    const port = await this.invoke('Store.getPort', 'proxyApi')
+    const port = await this.invoke('Ports.getPort', 'proxyApi')
     const TrojanClientService = await TrojanGRPC.getServiceClientConstructor()
     const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure())
     await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000)
@@ -195,7 +195,7 @@ class Trojan extends BaseModule {
 
     return R.mergeDeepRight(config, {
       run_type: 'client',
-      local_port: await this.invoke('Store.getPort', 'proxy'),
+      local_port: await this.invoke('Ports.getPort', 'proxy'),
       log_level: 2,
       log_file: Paths.TrojanLogFile,
       mux: {
@@ -205,7 +205,7 @@ class Trojan extends BaseModule {
       api: {
         enabled: true,
         api_addr: '127.0.0.1',
-        api_port: await this.invoke('Store.getPort', 'proxyApi')
+        api_port: await this.invoke('Ports.getPort', 'proxyApi')
       },
       router: {
         enabled: router.enabled,
