@@ -1,4 +1,4 @@
-const { createProxyNode } = require('./proxy/proxy-node')
+const { createProxyNode } = require('../proxy-node')
 const BaseModule = require('../base-module')
 
 class RPCMethods extends BaseModule {
@@ -30,10 +30,10 @@ class RPCMethods extends BaseModule {
   }
 
   /**
-     *
-     * @param {string} uuid
-     * @param {ProxyNode} node
-     */
+   *
+   * @param {string} uuid
+   * @param {ProxyNode} node
+   */
   setNodeByUUID = async (uuid, node) => {
     const nodeList = await this.invoke('Store.getNodeList')
     const newNodeList = nodeList.map(R.when(R.propEq('uuid', uuid), () => node))
@@ -63,10 +63,10 @@ class RPCMethods extends BaseModule {
   }
 
   /**
-     *
-     * @param {SystemProxyName} name
-     * @param {SystemProxyOption} option
-     */
+   *
+   * @param {SystemProxyName} name
+   * @param {SystemProxyOption} option
+   */
   setSystemProxyByName = async (name, option) => {
     if (name === 'pac') await this.invoke('Store.setSystemProxyPac', option)
 

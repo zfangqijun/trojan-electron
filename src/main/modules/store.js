@@ -19,7 +19,6 @@ class Store extends BaseModule {
     // this.onDidAnyChange((newValue) => {
     //     GlobalObserver.emit(GlobalObserver.Events.StoreChange, newValue)
     // })
-    this.log('Init Done')
   }
 
   /**

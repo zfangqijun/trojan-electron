@@ -27,13 +27,16 @@ app.on('ready', async () => {
 
     require('./preload')()
 
-    await Dao.register(Store)
-    await Dao.register(Ports)
-    await Dao.register(NetworkSetup)
-    await Dao.register(Tray)
-    await Dao.register(RpcMethods)
-    await Dao.register(RPCServer)
-    await Dao.register(Trojan)
+    Dao.autoInit(false)
+    Dao.register(Store)
+    Dao.register(Ports)
+    Dao.register(NetworkSetup)
+    Dao.register(Tray)
+    Dao.register(RpcMethods)
+    Dao.register(RPCServer)
+    Dao.register(Trojan)
+
+    await Dao.initAllModules()
 
     app.on('will-quit', async (event) => {
       event.preventDefault()

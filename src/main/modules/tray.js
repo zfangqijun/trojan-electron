@@ -2,7 +2,7 @@ const { Menu, Tray, MenuItem, clipboard } = require('electron')
 const fs = require('fs/promises')
 const path = require('path')
 
-const { createProxyNode } = require('./proxy/proxy-node')
+const { createProxyNode } = require('../proxy-node')
 const BaseModule = require('../base-module')
 
 const WindowManager = require('../window')
@@ -19,11 +19,11 @@ const notification = require('../notification/notification')
 
 class TrayMenu extends BaseModule {
   name = 'Tray'
-  tray = new Tray(Paths.IconTray)
+  tray = null
 
   init = async () => {
+    this.tray = new Tray(Paths.IconTray)
     this.render()
-    this.log('Init Done')
   }
 
   render = async () => {

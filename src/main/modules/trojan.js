@@ -3,10 +3,10 @@ const BaseModule = require('../base-module')
 
 const { spawn } = require('child_process')
 const fs = require('fs/promises')
-const grpc = require('@grpc/grpc-js')
 const { promisify } = require('util')
+const protoLoader = require('@grpc/proto-loader')
+const grpc = require('@grpc/grpc-js')
 
-const TrojanGRPC = require('./proxy/trojan-grpc')
 const template = require('./proxy/client-config-template.json')
 
 const notification = require('../notification/notification')
@@ -23,12 +23,14 @@ class Trojan extends BaseModule {
   traffic = {}
 
   init = async () => {
+    await this.waitModuleReady('Store')
+    await this.waitModuleReady('Ports')
+
     const currentNode = await this.invoke('Store.getCurrentNode')
 
     if (currentNode) {
       await this.start(currentNode.config)
     }
-    this.log('Init Done')
   }
 
   start = async (config) => {
@@ -69,7 +71,7 @@ class Trojan extends BaseModule {
     if (this.apiClientService) return
 
     const port = await this.invoke('Ports.getPort', 'proxyApi')
-    const TrojanClientService = await TrojanGRPC.getServiceClientConstructor()
+    const TrojanClientService = await getServiceClientConstructor()
     const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure())
     await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000)
     Trojan.GetTraffic = promisify(service.GetTraffic).bind(service)
@@ -236,5 +238,20 @@ function textToRules (text) {
     R.reject(R.startsWith('#'))
   )(text)
 }
+
+const getServiceClientConstructor = (function () {
+  /**
+     * @type {import('@grpc/grpc-js').ServiceClientConstructor}
+     */
+  let TrojanClientService
+  return async function () {
+    if (TrojanClientService) return TrojanClientService
+    const packageDefinition = await protoLoader.load(Paths.TrojanApiProto)
+    const grpcObject = grpc.loadPackageDefinition(packageDefinition)
+
+    TrojanClientService = grpcObject.trojan.api.TrojanClientService
+    return TrojanClientService
+  }
+}())
 
 module.exports = new Trojan()

@@ -18,7 +18,6 @@ class NetworkSetup extends BaseModule {
     } else {
       await this.disableSystemProxys(systemProxy)
     }
-    this.log('Init Done')
   }
 
   /**
@@ -269,10 +268,9 @@ class NetworkSetup extends BaseModule {
 
   exec = async (cmd) => {
     try {
-      this.log(cmd)
       return await exec(cmd)
     } catch (error) {
-      this.log.error(error)
+      this.log.error(cmd, error)
       throw error
     }
   }
