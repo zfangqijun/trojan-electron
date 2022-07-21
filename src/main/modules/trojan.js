@@ -8,12 +8,9 @@ const { promisify } = require('util');
 const TrojanGRPC = require('./proxy/trojan-grpc');
 const template = require('./proxy/client-config-template.json');
 
-const store = require('./store')
 const notification = require('../notification/notification')
 const GlobalObserver = require('../observer/observer');
-const Elog = require('../elog')('Trojan')
 const Paths = require('../paths');
-const ports = require('./ports');
 const { delay } = require('../util');
 
 class Trojan extends BaseModule {
@@ -70,7 +67,7 @@ class Trojan extends BaseModule {
     startApiClient = async () => {
         if (this.apiClientService) return;
 
-        const port = ports.getPort('proxyApi');
+        const port = await this.invoke('Store.getPort', 'proxyApi');
         const TrojanClientService = await TrojanGRPC.getServiceClientConstructor()
         const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure());
         await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000);
@@ -98,13 +95,11 @@ class Trojan extends BaseModule {
         ]);
 
         process.once('spawn', () => {
-            Elog.log(Paths.TrojanGo, Paths.TrojanClientConfig)
-            // resolve(process)
+            this.log(Paths.TrojanGo, Paths.TrojanClientConfig)
         })
 
         process.once('error', (error) => {
-            Elog.error(error)
-            // reject(error)
+            this.log.error(error)
         })
 
         process.on('exit', (code, signal) => {
@@ -113,7 +108,7 @@ class Trojan extends BaseModule {
                 from: 'exit',
                 data: 'trojan-go 进程退出'
             });
-            Elog.info('trojan-go exited', code, signal);
+            this.log('trojan-go exited', code, signal);
         })
 
         const { stdout, stderr } = process;
@@ -124,7 +119,7 @@ class Trojan extends BaseModule {
                 from: 'stdout',
                 data: dataString
             });
-            Elog.info(dataString);
+            this.log(dataString);
         })
 
         stderr.on('data', (data) => {
@@ -133,7 +128,7 @@ class Trojan extends BaseModule {
                 from: 'stderr',
                 data: dataString
             });
-            Elog.warn(dataString)
+            this.log.warn(dataString);
         })
         return process
 
@@ -202,7 +197,7 @@ class Trojan extends BaseModule {
 
         return R.mergeDeepRight(config, {
             run_type: 'client',
-            local_port: ports.getPort('proxy'),
+            local_port: await this.invoke('Store.getPort', 'proxy'),
             log_level: 2,
             log_file: Paths.TrojanLogFile,
             mux: {
@@ -212,7 +207,7 @@ class Trojan extends BaseModule {
             api: {
                 enabled: true,
                 api_addr: '127.0.0.1',
-                api_port: ports.getPort('proxyApi')
+                api_port: await this.invoke('Store.getPort', 'proxyApi'),
             },
             router: {
                 enabled: router.enabled,

@@ -17,6 +17,7 @@ class Dao {
         if (module.on) {
             const Elog = require('./elog')(module.name);
             module.on('log', Elog.info);
+            module.on('log/warn', Elog.warn);
             module.on('log/error', Elog.error);
             module.on('module/invoke', async (id, moduleName, methodName, ...args) => {
                 const callee = Dao.getModule(moduleName);

@@ -8,6 +8,10 @@ class BaseModule extends EventEmitter {
         this.log.error = (...args) => {
             this.emit('log/error', ...args);
         }
+
+        this.log.warn = (...args) => {
+            this.emit('log/warn', ...args);
+        }
     }
 
     log(...args) {
