@@ -1,181 +1,180 @@
 /// <reference path="../../common/types/electron-store.d.ts"/>
 
-const ElectronStore = require('electron-store');
-const GlobalObserver = require('../observer/observer');
-const BaseModule = require('../base-module');
+const ElectronStore = require('electron-store')
+const BaseModule = require('../base-module')
 
 class Store extends BaseModule {
-    name = 'Store';
-    eStore = new ElectronStore({
-        name: 'store',
-        accessPropertiesByDotNotation: true,
-        /**
+  name = 'Store'
+  eStore = new ElectronStore({
+    name: 'store',
+    accessPropertiesByDotNotation: true,
+    /**
          * @type {ElectronStoreState}
          */
-        defaults: require('../../common/store-defaults.json'),
-        schema: require('../../common/schema.json'),
-    });
+    defaults: require('../../common/store-defaults.json'),
+    schema: require('../../common/schema.json')
+  })
 
-    init = () => {
-        this.emit('log', 'Initializing store module');
-        // this.onDidAnyChange((newValue) => {
-        //     GlobalObserver.emit(GlobalObserver.Events.StoreChange, newValue)
-        // })
-    }
+  init = () => {
+    this.emit('log', 'Initializing store module')
+    // this.onDidAnyChange((newValue) => {
+    //     GlobalObserver.emit(GlobalObserver.Events.StoreChange, newValue)
+    // })
+  }
 
-    /**
-     * 
+  /**
+     *
      * @returns {ElectronStoreState}
      */
-    getStoreData = () => {
-        return this.eStore.store;
-    }
+  getStoreData = () => {
+    return this.eStore.store
+  }
 
-    /**
-     * 
-     * @param {ElectronStoreState} newValue 
+  /**
+     *
+     * @param {ElectronStoreState} newValue
      */
-    setStoreData = (newValue) => {
-        this.eStore.set(newValue);
-    }
+  setStoreData = (newValue) => {
+    this.eStore.set(newValue)
+  }
 
-    /**
+  /**
      * @type {() => boolean}
      */
-    getSystemProxyEnable = this.eStore.get.bind(this.eStore, 'systemProxy.enable');
+  getSystemProxyEnable = this.eStore.get.bind(this.eStore, 'systemProxy.enable')
 
-    /**
+  /**
      * @type {(value: boolean) => void}
      */
-    setSystemProxyEnable = this.eStore.set.bind(this.eStore, 'systemProxy.enable');
+  setSystemProxyEnable = this.eStore.set.bind(this.eStore, 'systemProxy.enable')
 
-    /**
+  /**
      * @type {() => SystemProxyOption}
      */
-    getSystemProxyWeb = this.eStore.get.bind(this.eStore, 'systemProxy.web');
+  getSystemProxyWeb = this.eStore.get.bind(this.eStore, 'systemProxy.web')
 
-    /**
+  /**
      * @type {(value: SystemProxyOption) => void}
      */
-    setSystemProxyWeb = this.eStore.set.bind(this.eStore, 'systemProxy.web');
+  setSystemProxyWeb = this.eStore.set.bind(this.eStore, 'systemProxy.web')
 
-    /**
+  /**
      * @type {() => SystemProxyOption}
      */
-    getSystemProxySecureWeb = this.eStore.get.bind(this.eStore, 'systemProxy.secureWeb');
+  getSystemProxySecureWeb = this.eStore.get.bind(this.eStore, 'systemProxy.secureWeb')
 
-    /**
+  /**
      * @type {(value: SystemProxyOption) => void}
      */
-    setSystemProxySecureWeb = this.eStore.set.bind(this.eStore, 'systemProxy.secureWeb');
+  setSystemProxySecureWeb = this.eStore.set.bind(this.eStore, 'systemProxy.secureWeb')
 
-    /**
+  /**
      * @type {() => SystemProxyOption}
      */
-    getSystemProxySocks = this.eStore.get.bind(this.eStore, 'systemProxy.socks');
+  getSystemProxySocks = this.eStore.get.bind(this.eStore, 'systemProxy.socks')
 
-    /**
+  /**
      * @type {(value: SystemProxyOption) => void}
      */
-    setSystemProxySocks = this.eStore.set.bind(this.eStore, 'systemProxy.socks');
+  setSystemProxySocks = this.eStore.set.bind(this.eStore, 'systemProxy.socks')
 
-    /**
+  /**
      * @type {() => SystemProxyOption}
      */
-    getSystemProxyPac = this.eStore.get.bind(this.eStore, 'systemProxy.pac');
+  getSystemProxyPac = this.eStore.get.bind(this.eStore, 'systemProxy.pac')
 
-    /**
+  /**
      * @type {(value: SystemProxyOption) => void}
      */
-    setSystemProxyPac = this.eStore.set.bind(this.eStore, 'systemProxy.pac');
+  setSystemProxyPac = this.eStore.set.bind(this.eStore, 'systemProxy.pac')
 
-    /**
+  /**
      * @type {() => SystemProxy}
      */
-    getSystemProxy = this.eStore.get.bind(this.eStore, 'systemProxy');
+  getSystemProxy = this.eStore.get.bind(this.eStore, 'systemProxy')
 
-    /**
+  /**
      * @type {(value: SystemProxy) => void}
      */
-    setSystemProxy = this.eStore.set.bind(this.eStore, 'systemProxy');
+  setSystemProxy = this.eStore.set.bind(this.eStore, 'systemProxy')
 
-    /**
+  /**
      * @type {() => ProxyNode[]}
      */
-    getNodeList = this.eStore.get.bind(this.eStore, 'proxyNode.list');
+  getNodeList = this.eStore.get.bind(this.eStore, 'proxyNode.list')
 
-    /**
+  /**
      * @type {() => string}
      */
-    getCurrentNodeUUID = this.eStore.get.bind(this.eStore, 'proxyNode.current');
+  getCurrentNodeUUID = this.eStore.get.bind(this.eStore, 'proxyNode.current')
 
-    /**
+  /**
      * @type {(value: string) => void}
      */
-    setCurrentNodeUUID = this.eStore.set.bind(this.eStore, 'proxyNode.current');
+  setCurrentNodeUUID = this.eStore.set.bind(this.eStore, 'proxyNode.current')
 
-    /**
+  /**
      * @type {() => ElectronStoreState['settings']['router']}
      */
-    getRouter = this.eStore.get.bind(this.eStore, 'settings.router');
+  getRouter = this.eStore.get.bind(this.eStore, 'settings.router')
 
-    /**
+  /**
      * @type {(value: ElectronStoreState['settings']['router']) => void}
      */
-    setRouter = this.eStore.set.bind(this.eStore, 'settings.router');
+  setRouter = this.eStore.set.bind(this.eStore, 'settings.router')
 
-    /**
+  /**
      * @type {() => RouterMode[]}
      */
-    getRouterModes = this.eStore.get.bind(this.eStore, 'settings.router.modes');
+  getRouterModes = this.eStore.get.bind(this.eStore, 'settings.router.modes')
 
-    /**
+  /**
      * @type {(value: RouterMode[]) => void}
      */
-    setRouterModes = this.eStore.set.bind(this.eStore, 'settings.router.modes');
+  setRouterModes = this.eStore.set.bind(this.eStore, 'settings.router.modes')
 
-    /**
-     * 
-     * @param {string} uuid 
+  /**
+     *
+     * @param {string} uuid
      * @returns {ProxyNode}
      */
-    getNodeByUUID = (uuid) => {
-        return this.getNodeList().find(R.propEq('uuid', uuid));
-    }
+  getNodeByUUID = (uuid) => {
+    return this.getNodeList().find(R.propEq('uuid', uuid))
+  }
 
-    /**
-     * 
+  /**
+     *
      * @returns {ProxyNode}
      */
-    getCurrentNode = () => {
-        return this.getNodeByUUID(this.getCurrentNodeUUID());
-    }
+  getCurrentNode = () => {
+    return this.getNodeByUUID(this.getCurrentNodeUUID())
+  }
 
-    /**
-     * 
-     * @param {ProxyNode} node 
+  /**
+     *
+     * @param {ProxyNode} node
      */
-    appendNode = (node) => {
-        this.setNodeList(this.getNodeList().concat(node))
-    }
+  appendNode = (node) => {
+    this.setNodeList(this.getNodeList().concat(node))
+  }
 
-    /**
-     * 
-     * @param {string} name 
+  /**
+     *
+     * @param {string} name
      * @returns {RouterMode}
      */
-    getRouterModeByName = (name) => {
-        return this.getRouterModes().find(R.propEq('name', name));
-    }
+  getRouterModeByName = (name) => {
+    return this.getRouterModes().find(R.propEq('name', name))
+  }
 
-    /**
-     * 
-     * @param {string} name 
-     * @param {RouterMode} mode 
+  /**
+     *
+     * @param {string} name
+     * @param {RouterMode} mode
      */
-    setRouterModeByName = (name, mode) => {
-        this.setRouterModes(this.getRouterModes().map(R.when(R.propEq('name', name), () => mode)))
-    }
+  setRouterModeByName = (name, mode) => {
+    this.setRouterModes(this.getRouterModes().map(R.when(R.propEq('name', name), () => mode)))
+  }
 }
 
-module.exports = new Store();
+module.exports = new Store()

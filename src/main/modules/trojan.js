@@ -1,243 +1,239 @@
-const BaseModule = require("../base-module");
+/* eslint-disable camelcase */
+const BaseModule = require('../base-module')
 
-const { spawn } = require('child_process');
+const { spawn } = require('child_process')
 const fs = require('fs/promises')
-const grpc = require('@grpc/grpc-js');
-const { promisify } = require('util');
+const grpc = require('@grpc/grpc-js')
+const { promisify } = require('util')
 
-const TrojanGRPC = require('./proxy/trojan-grpc');
-const template = require('./proxy/client-config-template.json');
+const TrojanGRPC = require('./proxy/trojan-grpc')
+const template = require('./proxy/client-config-template.json')
 
 const notification = require('../notification/notification')
-const GlobalObserver = require('../observer/observer');
-const Paths = require('../paths');
-const { delay } = require('../util');
+const GlobalObserver = require('../observer/observer')
+const Paths = require('../paths')
 
 class Trojan extends BaseModule {
-    name = "Trojan";
+  name = 'Trojan'
 
-    goProcess = null;
+  goProcess = null
 
-    config = null;
+  config = null
 
-    traffic = {};
+  traffic = {}
 
-    init = async () => {
-        const currentNode = await this.invoke('Store.getCurrentNode');
+  init = async () => {
+    const currentNode = await this.invoke('Store.getCurrentNode')
 
-        if (currentNode) {
-            await this.start(currentNode.config);
-        }
+    if (currentNode) {
+      await this.start(currentNode.config)
+    }
+  }
+
+  start = async (config) => {
+    if (this.goProcess) return
+
+    this.config = await this.overwriteConfig(config)
+
+    await fs.writeFile(
+      Paths.TrojanClientConfig,
+      JSON.stringify(this.config, null, '\t')
+    )
+
+    this.goProcess = await this.spawn()
+
+    await this.startApiClient()
+
+    this.log('started')
+  }
+
+  stop = async () => {
+    if (this.goProcess === null) return
+    return new Promise(resolve => {
+      this.goProcess.once('exit', () => {
+        this.log('stoped')
+        resolve()
+      })
+      this.goProcess.kill('SIGINT')
+    })
+  }
+
+  restart = async (config = this.config) => {
+    this.log('restart')
+    await this.stop()
+    await this.start(config)
+  }
+
+  startApiClient = async () => {
+    if (this.apiClientService) return
+
+    const port = await this.invoke('Store.getPort', 'proxyApi')
+    const TrojanClientService = await TrojanGRPC.getServiceClientConstructor()
+    const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure())
+    await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000)
+    Trojan.GetTraffic = promisify(service.GetTraffic).bind(service)
+    this.apiClientService = service
+  }
+
+  getTraffic = async () => {
+    if (R.isNil(Trojan.GetTraffic)) {
+      throw Error('api service is no ready')
     }
 
-    start = async (config) => {
-        if (this.goProcess) return;
+    return Trojan.GetTraffic({
+      user: {
+        password: Trojan.config.password[0]
+      }
+    })
+  }
 
-        this.config = await this.overwriteConfig(config);
+  spawn = () => {
+    // return new Promise((resolve, reject) => {
+    const process = spawn(Paths.TrojanGo, [
+      '-config',
+      Paths.TrojanClientConfig
+    ])
 
-        await fs.writeFile(
-            Paths.TrojanClientConfig,
-            JSON.stringify(this.config, null, "\t")
-        );
+    process.once('spawn', () => {
+      this.log(Paths.TrojanGo, Paths.TrojanClientConfig)
+    })
 
-        this.goProcess = await this.spawn();
+    process.once('error', (error) => {
+      this.log.error(error)
+    })
 
-        await this.startApiClient();
+    process.on('exit', (code, signal) => {
+      this.goProcess = null
+      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
+        from: 'exit',
+        data: 'trojan-go 进程退出'
+      })
+      this.log('trojan-go exited', code, signal)
+    })
 
-        this.log("started");
+    const { stdout, stderr } = process
+
+    stdout.on('data', (data) => {
+      const dataString = 'stdout: ' + data.toString()
+      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
+        from: 'stdout',
+        data: dataString
+      })
+      this.log(dataString)
+    })
+
+    stderr.on('data', (data) => {
+      const dataString = 'stderr: ' + data.toString()
+      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
+        from: 'stderr',
+        data: dataString
+      })
+      this.log.warn(dataString)
+    })
+    return process
+  }
+
+  getConfig = () => {
+    return this.config
+  }
+
+  toConfigFromOptions = (options) => {
+    const {
+      remote_addr,
+      remote_port,
+      password,
+      ssl,
+      mux = {},
+      websocket = {},
+      shadowsocks = {}
+    } = options
+
+    return R.mergeDeepRight(template, {
+      remote_addr,
+      remote_port: remote_port || 443,
+      password,
+      ssl: {
+        sni: (ssl && ssl.sni) || remote_addr
+      },
+      mux,
+      websocket,
+      shadowsocks
+    })
+  }
+
+  toConfigFromUrl = (url) => {
+    if (typeof url === 'string') {
+      url = new URL(url)
     }
 
-    stop = async () => {
-        if (this.goProcess === null) return;
-        return new Promise(resolve => {
-            this.goProcess.once("exit", () => {
-                this.log("stoped");
-                resolve();
-            });
-            this.goProcess.kill("SIGINT");
-        });
+    if (url.protocol !== 'trojan:' && url.protocol !== 'trojan-go:') {
+      notification.show({ title: '导入代理配置', body: 'URL需以trojan或trojan-go开头' })
+      throw Error('URL需以trojan或trojan-go开头')
     }
 
-    restart = async (config = this.config) => {
-        this.log("restart");
-        await this.stop();
-        await this.start(config);
+    if (url.username === '') {
+      notification.show({ title: '导入代理配置', body: '密码不能为空' })
+      throw Error('密码不能为空')
     }
 
-    startApiClient = async () => {
-        if (this.apiClientService) return;
-
-        const port = await this.invoke('Store.getPort', 'proxyApi');
-        const TrojanClientService = await TrojanGRPC.getServiceClientConstructor()
-        const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure());
-        await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000);
-        Trojan.GetTraffic = promisify(service.GetTraffic).bind(service);
-        this.apiClientService = service;
+    if (url.hostname === '') {
+      notification.show({ title: '导入代理配置', body: 'host不能为空' })
+      throw Error('host不能为空')
     }
 
-    getTraffic = async () => {
-        if (R.isNil(Trojan.GetTraffic)) {
-            throw Error('api service is no ready')
-        }
+    return this.toConfigFromOptions({
+      remote_addr: url.hostname,
+      remote_port: parseInt(url.port),
+      password: [url.username]
+    })
+  }
 
-        return Trojan.GetTraffic({
-            user: {
-                password: Trojan.config.password[0]
-            }
-        })
-    }
+  overwriteConfig = async (config) => {
+    const router = await this.invoke('Store.getRouter')
 
-    spawn = () => {
-        // return new Promise((resolve, reject) => {
-        const process = spawn(Paths.TrojanGo, [
-            '-config',
-            Paths.TrojanClientConfig,
-        ]);
+    const mode = router.modes[0]
 
-        process.once('spawn', () => {
-            this.log(Paths.TrojanGo, Paths.TrojanClientConfig)
-        })
-
-        process.once('error', (error) => {
-            this.log.error(error)
-        })
-
-        process.on('exit', (code, signal) => {
-            this.goProcess = null;
-            GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-                from: 'exit',
-                data: 'trojan-go 进程退出'
-            });
-            this.log('trojan-go exited', code, signal);
-        })
-
-        const { stdout, stderr } = process;
-
-        stdout.on('data', (data) => {
-            const dataString = 'stdout: ' + data.toString();
-            GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-                from: 'stdout',
-                data: dataString
-            });
-            this.log(dataString);
-        })
-
-        stderr.on('data', (data) => {
-            const dataString = 'stderr: ' + data.toString();
-            GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-                from: 'stderr',
-                data: dataString
-            });
-            this.log.warn(dataString);
-        })
-        return process
-
-    }
-
-    getConfig = () => {
-        return this.config;
-    }
-
-
-    toConfigFromOptions = (options) => {
-        const {
-            remote_addr,
-            remote_port,
-            password,
-            ssl,
-            mux = {},
-            websocket = {},
-            shadowsocks = {}
-        } = options;
-
-        return R.mergeDeepRight(template, {
-            remote_addr: remote_addr,
-            remote_port: remote_port || 443,
-            password: password,
-            ssl: {
-                sni: ssl && ssl.sni || remote_addr
-            },
-            mux,
-            websocket,
-            shadowsocks
-        })
-    }
-
-    toConfigFromUrl = (url) => {
-        if (typeof url === 'string') {
-            url = new URL(url)
-        }
-
-        if (url.protocol !== 'trojan:' && url.protocol !== 'trojan-go:') {
-            notification.show({ title: '导入代理配置', body: 'URL需以trojan或trojan-go开头' })
-            throw Error('URL需以trojan或trojan-go开头');
-        }
-
-        if (url.username === '') {
-            notification.show({ title: '导入代理配置', body: '密码不能为空' })
-            throw Error('密码不能为空')
-        }
-
-        if (url.hostname === '') {
-            notification.show({ title: '导入代理配置', body: 'host不能为空' })
-            throw Error('host不能为空')
-        }
-
-        return this.toConfigFromOptions({
-            remote_addr: url.hostname,
-            remote_port: parseInt(url.port),
-            password: [url.username]
-        })
-    }
-
-    overwriteConfig = async (config) => {
-        const router = await this.invoke('Store.getRouter');
-
-        const mode = router.modes[0]
-
-        return R.mergeDeepRight(config, {
-            run_type: 'client',
-            local_port: await this.invoke('Store.getPort', 'proxy'),
-            log_level: 2,
-            log_file: Paths.TrojanLogFile,
-            mux: {
-                concurrency: 8,
-                idle_timeout: 60 * 1000,
-            },
-            api: {
-                enabled: true,
-                api_addr: '127.0.0.1',
-                api_port: await this.invoke('Store.getPort', 'proxyApi'),
-            },
-            router: {
-                enabled: router.enabled,
-                bypass: [
-                    ...textToRules(mode.bypassText),
-                ],
-                proxy: [
-                    ...textToRules(mode.proxyText),
-                ],
-                block: [
-                    ...textToRules(mode.blockText),
-                ],
-                default_policy: mode.defaultPolicy,
-                domain_strategy: mode.domainStrategy,
-                geosite: mode.geosite,
-                geoip: mode.geoip,
-            }
-        })
-    }
-
+    return R.mergeDeepRight(config, {
+      run_type: 'client',
+      local_port: await this.invoke('Store.getPort', 'proxy'),
+      log_level: 2,
+      log_file: Paths.TrojanLogFile,
+      mux: {
+        concurrency: 8,
+        idle_timeout: 60 * 1000
+      },
+      api: {
+        enabled: true,
+        api_addr: '127.0.0.1',
+        api_port: await this.invoke('Store.getPort', 'proxyApi')
+      },
+      router: {
+        enabled: router.enabled,
+        bypass: [
+          ...textToRules(mode.bypassText)
+        ],
+        proxy: [
+          ...textToRules(mode.proxyText)
+        ],
+        block: [
+          ...textToRules(mode.blockText)
+        ],
+        default_policy: mode.defaultPolicy,
+        domain_strategy: mode.domainStrategy,
+        geosite: mode.geosite,
+        geoip: mode.geoip
+      }
+    })
+  }
 }
 
-function textToRules(text) {
-    return R.pipe(
-        R.split('\n'),
-        R.map(R.trim),
-        R.reject(R.isEmpty),
-        R.reject(R.startsWith('#'))
-    )(text)
+function textToRules (text) {
+  return R.pipe(
+    R.split('\n'),
+    R.map(R.trim),
+    R.reject(R.isEmpty),
+    R.reject(R.startsWith('#'))
+  )(text)
 }
 
-
-module.exports = new Trojan();
+module.exports = new Trojan()

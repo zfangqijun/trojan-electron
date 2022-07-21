@@ -1,16 +1,14 @@
-const EventEmitter = require('events');
-
+const EventEmitter = require('events')
 
 const Events = {
-    TrojanLog: 'Trojan.Log',
-    StoreChange: 'Store.Change',
+  TrojanLog: 'Trojan.Log',
+  StoreChange: 'Store.Change'
 }
-
 
 class Observer extends EventEmitter {
-    Events = Events;
+  Events = Events
 }
 
-const GlobalObserver = new Observer();
+const GlobalObserver = new Observer()
 
-module.exports = GlobalObserver;
+module.exports = GlobalObserver

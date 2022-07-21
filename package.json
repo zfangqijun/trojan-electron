@@ -11,7 +11,8 @@
     "build:main": "vite build --config ./vite.main.config.ts",
     "build:view": "tsc && vite build",
     "copy": "cp -rf ./src/view/dist ./.dist/src/view",
-    "preview:view": "vite preview"
+    "preview:view": "vite preview",
+    "standard": "standard --fix src/main/**/*.js"
   },
   "keywords": [],
   "author": {
@@ -58,7 +59,11 @@
     "generate-schema": "^2.6.0",
     "mkdirp": "^1.0.4",
     "rollup-plugin-copy": "^3.4.0",
+    "standard": "^17.0.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.6"
+  },
+  "standard": {
+    "globals": [ "R"]
   }
 }
