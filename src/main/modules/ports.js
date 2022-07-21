@@ -35,8 +35,6 @@ class Ports extends BaseModule {
       proxyApi,
       http
     }
-
-    this.log('Init Done')
   }
 
   /**

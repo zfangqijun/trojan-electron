@@ -19,7 +19,7 @@ class BaseModule extends EventEmitter {
   }
 
   invoke (methodPath, ...args) {
-    this.log('invoke', methodPath, args)
+    this.log('Module invoke', methodPath, JSON.stringify(args))
 
     const [moduleName, methodName] = methodPath.split('.')
 
@@ -40,6 +40,18 @@ class BaseModule extends EventEmitter {
       this.emit('module/invoke', String(this.invokeId), moduleName, methodName, ...args)
 
       this.invokeId++
+    })
+  }
+
+  waitModuleReady (moduleName) {
+    return new Promise((resolve, reject) => {
+      const onReady = (name) => {
+        if (name === moduleName) {
+          resolve()
+          this.removeListener('module/ready', onReady)
+        }
+      }
+      this.on('module/ready', onReady)
     })
   }
 }
