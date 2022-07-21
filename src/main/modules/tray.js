@@ -22,8 +22,8 @@ class TrayMenu extends BaseModule {
   tray = new Tray(Paths.IconTray)
 
   init = async () => {
-    this.log('init')
     this.render()
+    this.log('Init Done')
   }
 
   render = async () => {

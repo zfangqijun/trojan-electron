@@ -16,10 +16,10 @@ class Store extends BaseModule {
   })
 
   init = () => {
-    this.emit('log', 'Initializing store module')
     // this.onDidAnyChange((newValue) => {
     //     GlobalObserver.emit(GlobalObserver.Events.StoreChange, newValue)
     // })
+    this.log('Init Done')
   }
 
   /**
