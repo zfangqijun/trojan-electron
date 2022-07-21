@@ -5,6 +5,7 @@ const BaseModule = require('../base-module')
 
 class RPCServer extends BaseModule {
   name = 'RPCServer'
+  connections = new Set()
 
   init = async () => {
     await this.waitModuleReady('Ports')
@@ -18,20 +19,23 @@ class RPCServer extends BaseModule {
 
     return new Promise(resolve => {
       server.listen(port, () => {
-        this.log('RPC server listening on port', port)
+        this.log('Listening on port', port)
         resolve()
       })
     })
   }
 
   /**
-     *
-     * @param {import('socket.io').Socket} socket
-     */
+   *
+   * @param {import('socket.io').Socket} socket
+   */
   handleConnection = async (socket) => {
     this.log('Client connected', socket.id)
 
     const rpc = new RPC()
+
+    this.connections.add(rpc)
+
     rpc.setTransmitter(socket.send.bind(socket))
     socket.on('message', rpc.receive.bind(rpc))
 
