@@ -11,7 +11,6 @@ class NetworkSetup extends BaseModule {
   cacheServiceNames = []
 
   init = async () => {
-    this.emit('log', 'Initializing network setup module')
     const systemProxy = await this.invoke('Store.getSystemProxy')
 
     if (systemProxy.enable) {
@@ -19,6 +18,7 @@ class NetworkSetup extends BaseModule {
     } else {
       await this.disableSystemProxys(systemProxy)
     }
+    this.log('Init Done')
   }
 
   /**
@@ -269,10 +269,10 @@ class NetworkSetup extends BaseModule {
 
   exec = async (cmd) => {
     try {
-      this.emit('log', cmd)
+      this.log(cmd)
       return await exec(cmd)
     } catch (error) {
-      this.emit('log/error', error)
+      this.log.error(error)
       throw error
     }
   }

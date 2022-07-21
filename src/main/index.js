@@ -2,6 +2,14 @@
 const { app } = require('electron')
 const Elog = require('electron-log')
 const notification = require('./notification/notification')
+const Dao = require('./dao')
+const NetworkSetup = require('./modules/network-setup')
+const Store = require('./modules/store')
+const Ports = require('./modules/ports')
+const RPCServer = require('./modules/rpc-server')
+const RpcMethods = require('./modules/rpc-methods')
+const Tray = require('./modules/tray')
+const Trojan = require('./modules/trojan')
 
 app.on('ready', async () => {
   if (require('electron-squirrel-startup')) {
@@ -18,15 +26,6 @@ app.on('ready', async () => {
     Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
 
     require('./preload')()
-
-    const Dao = require('./dao')
-    const NetworkSetup = require('./modules/network-setup')
-    const Store = require('./modules/store')
-    const Ports = require('./modules/ports')
-    const RPCServer = require('./modules/rpc-server')
-    const RpcMethods = require('./modules/rpc-methods')
-    const Tray = require('./modules/tray')
-    const Trojan = require('./modules/trojan')
 
     await Dao.register(Store)
     await Dao.register(Ports)

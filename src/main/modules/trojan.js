@@ -28,6 +28,7 @@ class Trojan extends BaseModule {
     if (currentNode) {
       await this.start(currentNode.config)
     }
+    this.log('Init Done')
   }
 
   start = async (config) => {

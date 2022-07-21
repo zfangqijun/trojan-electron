@@ -7,8 +7,6 @@ class RPCServer extends BaseModule {
   name = 'RPCServer'
 
   init = async () => {
-    this.log('init')
-
     const server = createServer()
     const io = new Server(server)
 
@@ -18,6 +16,7 @@ class RPCServer extends BaseModule {
 
     return new Promise(resolve => {
       server.listen(port, () => {
+        this.log('Init Done')
         this.log('RPC server listening on port', port)
         resolve()
       })
