@@ -10,8 +10,16 @@ class NetworkSetup extends BaseModule {
      */
     cacheServiceNames = [];
 
-    init = () => {
+    init = async () => {
         this.emit('log', 'Initializing network setup module');
+        const systemProxy = await this.invoke('Store.getSystemProxy');
+
+        if (systemProxy.enable) {
+            await this.enableSystemProxys(systemProxy);
+        }
+        else {
+            await this.disableSystemProxys(systemProxy);
+        }
     }
 
     /**

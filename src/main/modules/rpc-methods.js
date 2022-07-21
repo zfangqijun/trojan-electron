@@ -1,4 +1,4 @@
-const { Trojan, createProxyNode } = require('./proxy')
+const { createProxyNode } = require('./proxy/proxy-node')
 const BaseModule = require('../base-module');
 
 class RPCMethods extends BaseModule {
@@ -18,11 +18,11 @@ class RPCMethods extends BaseModule {
     }
 
     trojanRestart = async () => {
-        Trojan.restart();
+        await this.invoke('Trojan.restart')
     }
 
     getTraffic = async () => {
-        return Trojan.getTraffic();
+        return await this.invoke('Trojan.getTraffic')
     }
 
     getStoreData = async () => {
@@ -43,7 +43,7 @@ class RPCMethods extends BaseModule {
     appendNode = async (options) => {
         const node = createProxyNode({
             name: options.name,
-            config: Trojan.toConfigFromOptions(options.config)
+            config: await this.invoke('Trojan.toConfigFromOptions', options.config)
         });
 
         await this.invoke('Store.appendNode', node);

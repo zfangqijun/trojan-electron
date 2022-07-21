@@ -6,7 +6,6 @@ const BaseModule = require('../base-module');
 
 const WindowManager = require('../window');
 const Paths = require('../paths');
-const { Trojan } = require('./proxy');
 
 const {
     exportRouterModeByName,
@@ -21,8 +20,9 @@ class TrayMenu extends BaseModule {
     name = 'Tray';
     tray = new Tray(Paths.IconTray);
 
-    init = () => {
+    init = async () => {
         this.log('init');
+        this.render();
     }
 
     render = async () => {
@@ -141,11 +141,11 @@ class TrayMenu extends BaseModule {
                         click: async () => {
                             if (uuid === await this.invoke('Store.getCurrentNodeUUID')) {
                                 await this.invoke('Store.setCurrentNodeUUID', null);
-                                Trojan.stop();
+                                await this.invoke('Trojan.stop');
                             } else {
                                 const node = await this.invoke('Store.getNodeByUUID', uuid);
                                 await this.invoke('Store.setCurrentNodeUUID', uuid);
-                                Trojan.restart(node.config);
+                                await this.invoke('Trojan.restart', node.config);
                             }
                             this.update()
                         }
@@ -163,7 +163,7 @@ class TrayMenu extends BaseModule {
                 try {
                     const url = new URL(clipboard.readText());
 
-                    const config = Trojan.toConfigFromUrl(url)
+                    const config = await this.invoke('Trojan.toConfigFromUrl', url)
 
                     const node = createProxyNode({
                         name: decodeURIComponent(url.hash).slice(1),
