@@ -28,14 +28,14 @@ export default function StatisticSection() {
     }
 
     useEffect(() => {
-        function getTraffic() {
-            invoke('getTraffic').then((traffic) => {
-                setTraffic(traffic)
-            }).finally(() => {
-                setTimeout(getTraffic, 2000)
-            })
-        }
-        getTraffic();
+        // function getTraffic() {
+        //     invoke('getTraffic').then((traffic) => {
+        //         setTraffic(traffic)
+        //     }).finally(() => {
+        //         setTimeout(getTraffic, 2000)
+        //     })
+        // }
+        // getTraffic();
     }, [])
 
     return (
