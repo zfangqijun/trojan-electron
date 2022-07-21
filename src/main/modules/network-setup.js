@@ -1,4 +1,3 @@
-const R = require('ramda');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const BaseModule = require('../base-module');

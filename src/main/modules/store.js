@@ -1,6 +1,5 @@
 /// <reference path="../../common/types/electron-store.d.ts"/>
 
-const R = require('ramda');
 const ElectronStore = require('electron-store');
 const GlobalObserver = require('../observer/observer');
 const BaseModule = require('../base-module');

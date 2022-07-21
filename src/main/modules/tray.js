@@ -1,5 +1,4 @@
 const { Menu, Tray, MenuItem, clipboard } = require('electron');
-const R = require('ramda');
 const fs = require('fs/promises');
 const path = require('path');
 

@@ -2,7 +2,6 @@
 
 const { spawn } = require('child_process');
 const fs = require('fs/promises')
-const R = require('ramda');
 const grpc = require('@grpc/grpc-js');
 const { promisify } = require('util');
 

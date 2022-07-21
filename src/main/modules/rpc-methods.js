@@ -1,8 +1,5 @@
-const store = require('./store');
 const { Trojan, createProxyNode } = require('./proxy')
-const networksetup = require('./network-setup');
 const BaseModule = require('../base-module');
-const R = require('ramda');
 
 class RPCMethods extends BaseModule {
     name = 'RPCMethods';

@@ -1,4 +1,3 @@
-const R = require('ramda');
 const { getPortPromise } = require('portfinder');
 const BaseModule = require('../base-module');
 
