@@ -6,7 +6,7 @@ import { useRPC } from '../hooks/use-rpc'
 import * as R from 'ramda'
 
 export default function StatisticSection() {
-    const { invoke } = useRPC();
+    const { rpc } = useRPC();
 
     const [traffic, setTraffic] = useState<any>()
 
@@ -28,14 +28,9 @@ export default function StatisticSection() {
     }
 
     useEffect(() => {
-        // function getTraffic() {
-        //     invoke('getTraffic').then((traffic) => {
-        //         setTraffic(traffic)
-        //     }).finally(() => {
-        //         setTimeout(getTraffic, 2000)
-        //     })
-        // }
-        // getTraffic();
+       rpc.onNotification('traffic', (traffic) => {
+        setTraffic(traffic)
+       })
     }, [])
 
     return (

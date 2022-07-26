@@ -5,11 +5,7 @@ const BaseModule = require('../base-module')
 
 class RPCServer extends BaseModule {
   name = 'RPCServer'
-  connections = new Set()
-  /**
-   * @type {Server}
-   */
-  io = null
+  rpcInstances = new Set()
 
   init = async () => {
     await this.waitModuleReady('Ports')
@@ -17,76 +13,71 @@ class RPCServer extends BaseModule {
     const server = createServer()
     const io = new Server(server)
 
-    io.of('/rpc')
-      .on('connection', this.handleConnection)
+    io.of('/rpc').on('connection', this.handleConnection)
 
     const port = await this.invoke('Ports.getPort', 'http')
 
     return new Promise(resolve => {
       server.listen(port, () => {
         this.log('Listening on port', port)
-        this.io = io
         resolve()
       })
     })
   }
 
-  notifyBrowser = () => {
-    this.connections.values().forEach(connection => {
-      connection.notify('rpc-update')
-    })
+  notifyAllSides = (method, params) => {
+    this.rpcInstances.forEach(rpc => rpc.notify(method, params))
   }
 
   /**
    *
    * @param {import('socket.io').Socket} socket
    */
-  handleConnection = async (socket) => {
-    this.log('Client connected', socket.id)
+  handleConnection = (socket) => {
+    this.log('新连接:', ...socket.rooms.values())
 
-    socket.join('rpc')
+    this.createRPCInstance(socket)
 
-    const rpc = new RPC()
+    socket.join('rpc-room')
+  }
 
-    this.connections.add(rpc)
+  createRPCInstance = async (socket) => {
+    const instance = new RPC()
 
-    rpc.setTransmitter(socket.send.bind(socket))
-    socket.on('message', rpc.receive.bind(rpc))
+    instance.exposeFromArray(await this.getMethods())
 
-    const methods = await this.invoke('RPCMethods.getMethods')
-
-    methods
-      .map((method) => {
-        const methodWrapper = (...args) => {
-          this.log('Browser Invoke:', method.name)
-
-          return method.apply(null, args).catch((error) => {
-            this.log.error('Browser Invoke Error:', method.name, args, error)
-            throw { message: error.message } // eslint-disable-line
-          })
-        }
-        return [method.name, methodWrapper]
-      })
-      .forEach(([name, method]) => {
-        rpc.expose(name, method)
-      })
-
-    rpc.notify('ready')
-
-    // todo 移动到methods中实现
-    // GlobalObserver.on(GlobalObserver.Events.StoreChange, notifyStoreChange)
-
-    socket.on('disconnect', () => {
-      this.log('Client disconnected', socket.id)
-      // GlobalObserver.removeListener(GlobalObserver.Events.StoreChange, notifyStoreChange);
-      methods.forEach(method => {
-        rpc.unexpose(method.name)
-      })
+    instance.setTransmitter((message) => {
+      socket.send(message)
     })
 
-    // function notifyStoreChange(newValue) {
-    //     rpc.notify(GlobalObserver.Events.StoreChange, newValue)
-    // }
+    socket.on('message', (message) => {
+      instance.receive(message)
+    })
+
+    socket.on('disconnect', () => {
+      this.log('连接断开:', socket.id)
+      this.rpcInstances.delete(RPC)
+    })
+
+    this.rpcInstances.add(instance)
+
+    instance.notify('ready')
+  }
+
+  getMethods = async () => {
+    const methods = await this.invoke('RPCMethods.getMethods')
+
+    return methods.map((method) => {
+      const methodWrapper = (...args) => {
+        this.log('Browser Invoke:', method.name)
+
+        return method.apply(null, args).catch((error) => {
+          this.log.error('Browser Invoke Error:', method.name, args, error)
+          throw { message: error.message } // eslint-disable-line
+        })
+      }
+      return [method.name, methodWrapper]
+    })
   }
 }
 

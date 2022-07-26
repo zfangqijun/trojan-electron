@@ -5,7 +5,7 @@ import { useElectronStore } from '../hooks/store';
 import { useRPC } from '../hooks/use-rpc';
 
 export default function SystemProxySection() {
-    const { invoke } = useRPC();
+    const { rpc } = useRPC();
 
     const { systemProxy } = useElectronStore();
     const { enable, web, secureWeb, socks } = systemProxy;
@@ -16,9 +16,9 @@ export default function SystemProxySection() {
             const currentEnableValue = R.path([name, 'enable'], systemProxy);
             const newEnableValue = !currentEnableValue;
 
-            await invoke('setSystemProxyByName', name, { enable: newEnableValue })
-            await invoke('enableSystemProxy', name, newEnableValue)
-            await invoke('trayUpdate');
+            await rpc.invoke('setSystemProxyByName', name, { enable: newEnableValue })
+            await rpc.invoke('enableSystemProxy', name, newEnableValue)
+            await rpc.invoke('trayUpdate');
 
             notification.success({ message: newEnableValue })
 

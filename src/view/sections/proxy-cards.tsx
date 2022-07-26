@@ -8,7 +8,7 @@ import { CheckCircleTwoTone, PlusOutlined, ReloadOutlined } from '@ant-design/ic
 import { useRPC } from '../hooks/use-rpc';
 
 export default function ProxyCardsSection() {
-    const { invoke } = useRPC()
+    const { rpc } = useRPC()
 
     const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ export default function ProxyCardsSection() {
 
     const trojanRestart = async () => {
         try {
-            await invoke('trojanRestart')
+            await rpc.invoke('trojanRestart')
             notification.success({ message: '代理服务重启成功' })
         } catch (error) {
             console.log(error)
@@ -62,8 +62,8 @@ export default function ProxyCardsSection() {
                                             throw new Error('不能删除活跃的节点')
                                         }
 
-                                        await invoke('removeNodeByUUID', key)
-                                        await invoke('trayUpdate')
+                                        await rpc.invoke('removeNodeByUUID', key)
+                                        await rpc.invoke('trayUpdate')
                                         notification.success({ message: '代理服务重启成功' })
                                     }
                                     catch (error) {

@@ -81,8 +81,10 @@ class Trojan extends BaseModule {
 
     this.getTrafficTimer = setInterval(async () => {
       const args = { user: { password: this.config.password[0] } }
-      await GetTraffic(args)
-    }, 10000)
+      const traffic = await GetTraffic(args)
+
+      this.invoke('RPCServer.notifyAllSides', 'traffic', traffic)
+    }, 1000 * 2)
   }
 
   disableTrafficNotify = async () => {

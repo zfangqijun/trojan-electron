@@ -34,7 +34,7 @@
     "electron-store": "^8.0.1",
     "get-random-values": "^2.0.0",
     "js-yaml": "^4.1.0",
-    "jsonrpcv2": "^0.2.0",
+    "jsonrpcv2": "^0.3.2",
     "koa": "^2.13.4",
     "portfinder": "^1.0.28",
     "ramda": "^0.28.0",
@@ -64,6 +64,8 @@
     "vite": "^2.9.6"
   },
   "standard": {
-    "globals": [ "R"]
+    "globals": [
+      "R"
+    ]
   }
 }

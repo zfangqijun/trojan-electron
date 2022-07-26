@@ -24,7 +24,7 @@ specifiers:
   generate-schema: ^2.6.0
   get-random-values: ^2.0.0
   js-yaml: ^4.1.0
-  jsonrpcv2: ^0.2.0
+  jsonrpcv2: ^0.3.2
   koa: ^2.13.4
   mkdirp: ^1.0.4
   portfinder: ^1.0.28
@@ -55,7 +55,7 @@ dependencies:
   electron-store: 8.0.1
   get-random-values: 2.0.0
   js-yaml: 4.1.0
-  jsonrpcv2: 0.2.0
+  jsonrpcv2: 0.3.2
   koa: 2.13.4
   portfinder: 1.0.28
   ramda: 0.28.0
@@ -3344,8 +3344,8 @@ packages:
     resolution: {integrity: sha512-/cbbSxtZWs1O7R4tWqabrCM/t3N8qKUZMAg9IUqpPvUs6UyRvm6pCNYkskyKN/XU0UgffW+NY2ZRr8t0AknX7g==}
     dev: false
 
-  /jsonrpcv2/0.2.0:
-    resolution: {integrity: sha512-0GJS2UD+t5o462Q8GDxfEVR1M50NNHIOAwXcsqdqC6gfNgZI5nAFrTOqGy1s6TmaO8IHjwjR+F2UiLfYNeyk+A==}
+  /jsonrpcv2/0.3.2:
+    resolution: {integrity: sha512-0TNya8DrBiMIcxuTNrDLTeR8J7j88hmXspIZ7Ffi5Llp/KJhEcfnMuzNeF2L/BhQFzbAlJHIn7In7pqVXDNJ6A==}
     dependencies:
       events: 3.3.0
       jsonrpc-lite: 2.2.0

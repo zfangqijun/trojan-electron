@@ -11,7 +11,7 @@ import { textToRules } from '../util'
 const rulePrefixs = ['domain:', 'full:', 'regexp:', 'cidr:', 'geosite:', 'geoip:']
 
 function RouterSettings() {
-    const { invoke } = useRPC();
+    const { rpc } = useRPC();
 
     const [form] = Form.useForm<Record<'proxyText' | 'bypassText' | 'blockText' | 'defaultPolicy' | 'domainStrategy' | 'geosite' | 'geoip', string>>();
 
@@ -61,7 +61,7 @@ function RouterSettings() {
             check([proxy, bypass, block].flat())
             console.log([proxy, bypass, block].flat().join('\n'))
 
-            await invoke('setRouterModeByName', 'default', R.mergeDeepRight(mode, {
+            await rpc.invoke('setRouterModeByName', 'default', R.mergeDeepRight(mode, {
                 proxyText: values.proxyText,
                 bypassText: values.bypassText,
                 blockText: values.blockText,
@@ -74,7 +74,7 @@ function RouterSettings() {
             notification.success({ message: '更改成功' })
 
             if (restart) {
-                await invoke('trojanRestart');
+                await rpc.invoke('trojanRestart');
                 notification.success({ message: '代理服务重启成功' })
             }
 

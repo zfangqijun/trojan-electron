@@ -4,20 +4,15 @@ import { setElectronStoreState } from '../redux/electron-store'
 import { useDispatch } from 'react-redux'
 
 const url = 'ws://127.0.0.1:3188/rpc';
+
 const rpc = new RPC();
+
 const socket = io(url, {
     transports: ['websocket'],
     autoConnect: false
 })
 
 var isInit = false;
-
-function invoke(methodName: string, ...args: any[]) {
-    return rpc.invoke(methodName, args).catch((result) => {
-        throw new Error(result?.data?.error?.message)
-    })
-}
-
 
 export function useRPC() {
     const dispatch = useDispatch();
@@ -26,11 +21,11 @@ export function useRPC() {
         socket.connect();
     };
 
-    if (isInit) return { rpc, invoke };
+    if (isInit) return { rpc };
 
 
     rpc.onNotification('ready', async () => {
-        const storeData: any = await rpc.invoke('getStoreData');
+        const storeData: any = await rpc.invoke('getStoreData')
         console.log('getStoreData', storeData)
         dispatch(setElectronStoreState(storeData))
     })
@@ -62,6 +57,6 @@ export function useRPC() {
 
     isInit = true;
 
-    return { rpc, invoke };
+    return { rpc };
 }
 

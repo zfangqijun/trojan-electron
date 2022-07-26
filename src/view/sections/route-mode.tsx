@@ -8,7 +8,7 @@ import { setVisible } from '../redux/drawer';
 import { textToRules } from '../util';
 
 export default function RouteModeSection() {
-    const { invoke } = useRPC();
+    const { rpc } = useRPC();
     const dispatch = useDispatch()
 
     const { settings } = useElectronStore();
@@ -18,8 +18,8 @@ export default function RouteModeSection() {
     const { bypassText, proxyText, blockText } = mode;
 
     const handleSwitchClick = async (enabled: boolean) => {
-        await invoke('setRouter', R.assoc('enabled', enabled, router))
-        await invoke('trojanRestart');
+        await rpc.invoke('setRouter', R.assoc('enabled', enabled, router))
+        await rpc.invoke('trojanRestart');
         notification.success({ message: '代理服务已重启' });
     }
 

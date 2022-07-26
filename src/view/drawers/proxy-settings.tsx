@@ -12,7 +12,7 @@ const formItemLayout = {
 }
 
 function ProxySettings() {
-    const { invoke } = useRPC();
+    const { rpc } = useRPC();
 
     const [form] = Form.useForm();
 
@@ -109,7 +109,7 @@ function ProxySettings() {
                     config
                 }
 
-                await invoke('appendNode', node);
+                await rpc.invoke('appendNode', node);
                 hideDrawer();
                 notification.success({ message: `新增成功` })
             } else {
@@ -119,7 +119,7 @@ function ProxySettings() {
                     config
                 });
 
-                await invoke('setNodeByUUID', node.uuid, node);
+                await rpc.invoke('setNodeByUUID', node.uuid, node);
                 hideDrawer();
                 notification.success({ message: '修改成功' })
             }
