@@ -1,13 +1,13 @@
-import { Layout, notification } from 'antd';
+import { Layout } from 'antd'
 import Drawers from './drawers'
-import SystemProxySection from './sections/system-proxy';
-import ProxyCardsSection from './sections/proxy-cards';
-import RouteModeSection from './sections/route-mode';
-import StatisticSection from './sections/statistic';
+import SystemProxySection from './sections/system-proxy'
+import ProxyCardsSection from './sections/proxy-cards'
+import RouteModeSection from './sections/route-mode'
+import StatisticSection from './sections/statistic'
 
-const { Content, Header } = Layout
+const { Content } = Layout
 
-function App() {
+function App () {
   return (
     <Layout>
       <div className='darg-region' style={{ height: '2rem' }} />
@@ -30,7 +30,7 @@ function App() {
         </div>
         <Drawers />
       </Content>
-    </Layout >
+    </Layout>
   )
 }
 

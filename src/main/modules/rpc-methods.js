@@ -25,6 +25,10 @@ class RPCMethods extends BaseModule {
     return await this.invoke('Trojan.getTraffic')
   }
 
+  enableTrafficNotify = async () => {
+    await this.invoke('Trojan.enableTrafficNotify')
+  }
+
   getStoreData = async () => {
     return this.invoke('Store.getStoreData')
   }

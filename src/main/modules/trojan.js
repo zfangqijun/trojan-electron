@@ -15,12 +15,8 @@ const Paths = require('../paths')
 
 class Trojan extends BaseModule {
   name = 'Trojan'
-
   goProcess = null
-
   config = null
-
-  traffic = {}
 
   init = async () => {
     await this.waitModuleReady('Store')
@@ -45,7 +41,7 @@ class Trojan extends BaseModule {
 
     this.goProcess = await this.spawn()
 
-    await this.startApiClient()
+    this.enableTrafficNotify()
 
     this.log('started')
   }
@@ -67,27 +63,30 @@ class Trojan extends BaseModule {
     await this.start(config)
   }
 
-  startApiClient = async () => {
+  initApiclientService = async () => {
     if (this.apiClientService) return
 
     const port = await this.invoke('Ports.getPort', 'proxyApi')
     const TrojanClientService = await getServiceClientConstructor()
-    const service = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure())
-    await promisify(service.waitForReady).call(service, new Date().getTime() + 10 * 1000)
-    Trojan.GetTraffic = promisify(service.GetTraffic).bind(service)
-    this.apiClientService = service
+    this.apiClientService = new TrojanClientService(`127.0.0.1:${port}`, grpc.ChannelCredentials.createInsecure())
+    await promisify(this.apiClientService.waitForReady).call(this.apiClientService, new Date().getTime() + 10 * 1000)
   }
 
-  getTraffic = async () => {
-    if (R.isNil(Trojan.GetTraffic)) {
-      throw Error('api service is no ready')
-    }
+  enableTrafficNotify = async () => {
+    this.disableTrafficNotify()
 
-    return Trojan.GetTraffic({
-      user: {
-        password: Trojan.config.password[0]
-      }
-    })
+    await this.initApiclientService()
+
+    const GetTraffic = promisify(this.apiClientService.GetTraffic).bind(this.apiClientService)
+
+    this.getTrafficTimer = setInterval(async () => {
+      const args = { user: { password: this.config.password[0] } }
+      await GetTraffic(args)
+    }, 10000)
+  }
+
+  disableTrafficNotify = async () => {
+    clearInterval(this.getTrafficTimer)
   }
 
   spawn = () => {
@@ -241,8 +240,8 @@ function textToRules (text) {
 
 const getServiceClientConstructor = (function () {
   /**
-     * @type {import('@grpc/grpc-js').ServiceClientConstructor}
-     */
+   * @type {import('@grpc/grpc-js').ServiceClientConstructor}
+   */
   let TrojanClientService
   return async function () {
     if (TrojanClientService) return TrojanClientService

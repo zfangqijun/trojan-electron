@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 import { setElectronStoreState } from '../redux/electron-store'
 import { useDispatch } from 'react-redux'
 
-const url = 'ws://127.0.0.1:3188';
+const url = 'ws://127.0.0.1:3188/rpc';
 const rpc = new RPC();
 const socket = io(url, {
     transports: ['websocket'],

@@ -6,6 +6,10 @@ const BaseModule = require('../base-module')
 class RPCServer extends BaseModule {
   name = 'RPCServer'
   connections = new Set()
+  /**
+   * @type {Server}
+   */
+  io = null
 
   init = async () => {
     await this.waitModuleReady('Ports')
@@ -13,15 +17,23 @@ class RPCServer extends BaseModule {
     const server = createServer()
     const io = new Server(server)
 
-    io.on('connection', this.handleConnection)
+    io.of('/rpc')
+      .on('connection', this.handleConnection)
 
     const port = await this.invoke('Ports.getPort', 'http')
 
     return new Promise(resolve => {
       server.listen(port, () => {
         this.log('Listening on port', port)
+        this.io = io
         resolve()
       })
+    })
+  }
+
+  notifyBrowser = () => {
+    this.connections.values().forEach(connection => {
+      connection.notify('rpc-update')
     })
   }
 
@@ -31,6 +43,8 @@ class RPCServer extends BaseModule {
    */
   handleConnection = async (socket) => {
     this.log('Client connected', socket.id)
+
+    socket.join('rpc')
 
     const rpc = new RPC()
 
