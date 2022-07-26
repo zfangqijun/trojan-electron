@@ -19,8 +19,6 @@ class BaseModule extends EventEmitter {
   }
 
   invoke (methodPath, ...args) {
-    this.log('Module invoke', methodPath, JSON.stringify(args))
-
     const [moduleName, methodName] = methodPath.split('.')
 
     if (!moduleName || !methodName) {

@@ -28,9 +28,15 @@ export default function StatisticSection() {
     }
 
     useEffect(() => {
-       rpc.onNotification('traffic', (traffic) => {
-        setTraffic(traffic)
-       })
+        rpc.onNotification('traffic', (traffic) => {
+            setTraffic(traffic)
+        })
+
+        rpc.invoke('enableTrafficNotify');
+
+        return () => {
+            rpc.invoke('disableTrafficNotify')
+        }
     }, [])
 
     return (

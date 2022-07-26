@@ -41,8 +41,6 @@ class Trojan extends BaseModule {
 
     this.goProcess = await this.spawn()
 
-    this.enableTrafficNotify()
-
     this.log('started')
   }
 
@@ -73,7 +71,7 @@ class Trojan extends BaseModule {
   }
 
   enableTrafficNotify = async () => {
-    this.disableTrafficNotify()
+    if (this.getTrafficTimer) return
 
     await this.initApiclientService()
 
@@ -87,8 +85,9 @@ class Trojan extends BaseModule {
     }, 1000 * 2)
   }
 
-  disableTrafficNotify = async () => {
+  disableTrafficNotify = () => {
     clearInterval(this.getTrafficTimer)
+    this.getTrafficTimer = null
   }
 
   spawn = () => {
