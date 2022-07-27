@@ -270,7 +270,7 @@ class NetworkSetup extends BaseModule {
     try {
       return await exec(cmd)
     } catch (error) {
-      this.log.error(cmd, error)
+      this.logError(cmd, error)
       throw error
     }
   }

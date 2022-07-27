@@ -72,7 +72,7 @@ class RPCServer extends BaseModule {
         this.log('Browser Invoke:', method.name)
 
         return method.apply(null, args).catch((error) => {
-          this.log.error('Browser Invoke Error:', method.name, args, error)
+          this.logError('Browser Invoke Error:', method.name, args, error)
           throw { message: error.message } // eslint-disable-line
         })
       }

@@ -1,7 +1,6 @@
 
 const { app } = require('electron')
 const Elog = require('electron-log')
-const notification = require('./notification/notification')
 const Dao = require('./dao')
 const NetworkSetup = require('./modules/network-setup')
 const Store = require('./modules/store')
@@ -10,6 +9,7 @@ const RPCServer = require('./modules/rpc-server')
 const RpcMethods = require('./modules/rpc-methods')
 const Tray = require('./modules/tray')
 const Trojan = require('./modules/trojan')
+const Notification = require('./modules/notification')
 
 app.on('ready', async () => {
   if (require('electron-squirrel-startup')) {
@@ -18,7 +18,7 @@ app.on('ready', async () => {
     app.exit()
   } else {
     process.on('uncaughtException', (error) => {
-      notification.show({ title: 'Error', body: error.message })
+      Notification.show('Error', error.message)
       Elog.error('uncaughtException', error)
     })
 
@@ -35,6 +35,7 @@ app.on('ready', async () => {
     Dao.register(RpcMethods)
     Dao.register(RPCServer)
     Dao.register(Trojan)
+    Dao.register(Notification)
 
     await Dao.initAllModules()
 

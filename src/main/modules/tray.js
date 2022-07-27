@@ -15,8 +15,6 @@ const {
   importCurrentNode
 } = require('../toml')
 
-const notification = require('../notification/notification')
-
 class TrayMenu extends BaseModule {
   name = 'Tray'
   tray = null
@@ -76,8 +74,8 @@ class TrayMenu extends BaseModule {
           }
           await this.invoke('Store.setSystemProxyEnable', checked)
         } catch (error) {
-          notification.show({ title: '系统代理', body: error.message })
-          this.log.error(error)
+          this.invoke('Notification.show', 'Error', error.message)
+          this.logError(error)
         }
       }
     })
@@ -178,11 +176,11 @@ class TrayMenu extends BaseModule {
           await this.invoke('Store.appendNode', node)
 
           this.update()
-
-          notification.show({ title: '导入代理配置', body: '导入成功' })
+          this.invoke('Notification.show', '导入代理配置', '导入成功')
         } catch (error) {
-          notification.show({ title: '导入代理配置', body: error.message })
-          console.error(error)
+          this.logError(error)
+          this.log(error)
+          this.invoke('Notification.show', '导入代理配置', error.message)
         }
       }
     })

@@ -28,7 +28,7 @@ export default function StatisticSection() {
     }
 
     useEffect(() => {
-        rpc.onNotification('traffic', (traffic) => {
+        rpc.onNotification('Trojan.Traffic', (traffic) => {
             setTraffic(traffic)
         })
 

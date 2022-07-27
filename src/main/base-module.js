@@ -3,26 +3,27 @@ const EventEmitter = require('events')
 class BaseModule extends EventEmitter {
   invokeId = 0
 
-  constructor () {
-    super()
-    this.log.error = (...args) => {
-      this.emit('log/error', ...args)
-    }
-
-    this.log.warn = (...args) => {
-      this.emit('log/warn', ...args)
-    }
-  }
-
   log (...args) {
     this.emit('log', ...args)
+  }
+
+  logDebug (...args) {
+    this.emit('log/debug', ...args)
+  }
+
+  logWarn (...args) {
+    this.emit('log/warn', ...args)
+  }
+
+  logError (...args) {
+    this.emit('log/error', ...args)
   }
 
   invoke (methodPath, ...args) {
     const [moduleName, methodName] = methodPath.split('.')
 
     if (!moduleName || !methodName) {
-      this.log.error(new Error(`路径: ${methodPath} 不合法`))
+      this.logError(new Error(`路径: ${methodPath} 不合法`))
       return Promise.reject(new Error(`methodPath:${methodPath} 不合法`))
     }
 

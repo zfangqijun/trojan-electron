@@ -9,8 +9,6 @@ const grpc = require('@grpc/grpc-js')
 
 const template = require('./proxy/client-config-template.json')
 
-const notification = require('../notification/notification')
-const GlobalObserver = require('../observer/observer')
 const Paths = require('../paths')
 
 class Trojan extends BaseModule {
@@ -81,7 +79,7 @@ class Trojan extends BaseModule {
       const args = { user: { password: this.config.password[0] } }
       const traffic = await GetTraffic(args)
 
-      this.invoke('RPCServer.notifyAllSides', 'traffic', traffic)
+      this.invoke('RPCServer.notifyAllSides', 'Trojan.Traffic', traffic)
     }, 1000 * 2)
   }
 
@@ -102,36 +100,27 @@ class Trojan extends BaseModule {
     })
 
     process.once('error', (error) => {
-      this.log.error(error)
+      this.logError(error)
     })
 
     process.on('exit', (code, signal) => {
       this.goProcess = null
-      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-        from: 'exit',
-        data: 'trojan-go 进程退出'
-      })
       this.log('trojan-go exited', code, signal)
+      this.invoke('RPCServer.notifyAllSides', 'Trojan.Log', { from: 'exit', data: 'trojan-go exited' })
     })
 
     const { stdout, stderr } = process
 
     stdout.on('data', (data) => {
-      const dataString = 'stdout: ' + data.toString()
-      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-        from: 'stdout',
-        data: dataString
-      })
-      this.log(dataString)
+      data = data.toString()
+      this.invoke('RPCServer.notifyAllSides', 'Trojan.Log', { from: 'stdout', data })
+      this.log(data)
     })
 
     stderr.on('data', (data) => {
-      const dataString = 'stderr: ' + data.toString()
-      GlobalObserver.emit(GlobalObserver.Events.TrojanLog, {
-        from: 'stderr',
-        data: dataString
-      })
-      this.log.warn(dataString)
+      data = data.toString()
+      this.invoke('RPCServer.notifyAllSides', 'Trojan.Log', { from: 'stderr', data })
+      this.logError(data)
     })
     return process
   }
@@ -170,17 +159,14 @@ class Trojan extends BaseModule {
     }
 
     if (url.protocol !== 'trojan:' && url.protocol !== 'trojan-go:') {
-      notification.show({ title: '导入代理配置', body: 'URL需以trojan或trojan-go开头' })
       throw Error('URL需以trojan或trojan-go开头')
     }
 
     if (url.username === '') {
-      notification.show({ title: '导入代理配置', body: '密码不能为空' })
       throw Error('密码不能为空')
     }
 
     if (url.hostname === '') {
-      notification.show({ title: '导入代理配置', body: 'host不能为空' })
       throw Error('host不能为空')
     }
 
@@ -200,7 +186,7 @@ class Trojan extends BaseModule {
       run_type: 'client',
       local_port: await this.invoke('Ports.getPort', 'proxy'),
       log_level: 2,
-      log_file: Paths.TrojanLogFile,
+      log_file: null,
       mux: {
         concurrency: 8,
         idle_timeout: 60 * 1000
