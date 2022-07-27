@@ -190,38 +190,39 @@ class TrayMenu extends BaseModule {
     return [
       new MenuItem({
         label: '导出路由配置',
-        click: async function () {
-          const doc = exportRouterModeByName('default')
+        click: async () => {
+          const docBuffer = await this.invoke('Toml.exportRouteModeDocument', 'default')
           const filePath = path.resolve(Paths.Downloads, 'trojan-katana.toml')
-          await fs.writeFile(filePath, doc)
-          console.log(`"${filePath}"`)
+          await fs.writeFile(filePath, docBuffer)
+          this.log(filePath)
         }
       }),
       new MenuItem({
         label: '导入路由配置',
-        click: async function () {
+        click: async () => {
           const filePath = path.resolve(Paths.Downloads, 'trojan-katana.toml')
-          const buffer = await fs.readFile(filePath)
-          importRouterModeByName('default', buffer.toString())
-        }
-      }),
-      new MenuItem({
-        label: '导出节点配置',
-        click: async function () {
-          const doc = exportCurrentNode()
-          const filePath = path.resolve(Paths.Downloads, 'trojan-katana-node.toml')
-          await fs.writeFile(filePath, doc)
-          console.log(`"${filePath}"`)
-        }
-      }),
-      new MenuItem({
-        label: '导入节点配置',
-        click: async function () {
-          const filePath = path.resolve(Paths.Downloads, 'trojan-katana-node.toml')
-          const buffer = await fs.readFile(filePath)
-          importCurrentNode(buffer.toString())
+          const docBuffer = await fs.readFile(filePath)
+          await this.invoke('Toml.importRouteModeDocument', 'default', docBuffer)
+          this.log(docBuffer.toString())
         }
       })
+      // new MenuItem({
+      //   label: '导出节点配置',
+      //   click: async function () {
+      //     const doc = exportCurrentNode()
+      //     const filePath = path.resolve(Paths.Downloads, 'trojan-katana-node.toml')
+      //     await fs.writeFile(filePath, doc)
+      //     console.log(`"${filePath}"`)
+      //   }
+      // }),
+      // new MenuItem({
+      //   label: '导入节点配置',
+      //   click: async function () {
+      //     const filePath = path.resolve(Paths.Downloads, 'trojan-katana-node.toml')
+      //     const buffer = await fs.readFile(filePath)
+      //     importCurrentNode(buffer.toString())
+      //   }
+      // })
     ]
   }
 

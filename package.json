@@ -33,6 +33,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
     "get-random-values": "^2.0.0",
+    "is-valid-domain": "^0.1.6",
     "js-yaml": "^4.1.0",
     "jsonrpcv2": "^0.3.2",
     "koa": "^2.13.4",

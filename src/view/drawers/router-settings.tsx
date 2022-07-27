@@ -7,6 +7,7 @@ import { useDrawer, useElectronStore } from '../hooks/store'
 import { useRPC } from '../hooks/use-rpc'
 import { useThrottleCallback, useThrottle } from '@react-hook/throttle'
 import { textToRules } from '../util'
+import isValidDomain from 'is-valid-domain'
 
 const rulePrefixs = ['domain:', 'full:', 'regexp:', 'cidr:', 'geosite:', 'geoip:']
 
@@ -191,6 +192,11 @@ function check(lines: string[]) {
         if (rulePrefixs.some(p => line.startsWith(p))) {
             continue;
         }
+
+        if(isValidDomain(line)){
+            continue
+        }
+        
         throw new Error(line + '缺少前缀' + rulePrefixs)
     }
 }

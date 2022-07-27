@@ -11,6 +11,8 @@ const template = require('./proxy/client-config-template.json')
 
 const Paths = require('../paths')
 
+const isValidDomain = require('is-valid-domain')
+
 class Trojan extends BaseModule {
   name = 'Trojan'
   goProcess = null
@@ -221,7 +223,8 @@ function textToRules (text) {
     R.split('\n'),
     R.map(R.trim),
     R.reject(R.isEmpty),
-    R.reject(R.startsWith('#'))
+    R.reject(R.startsWith('#')),
+    R.map(R.when(i => isValidDomain(i), i => 'domain:' + i))
   )(text)
 }
 

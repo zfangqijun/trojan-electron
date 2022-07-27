@@ -10,6 +10,7 @@ const RpcMethods = require('./modules/rpc-methods')
 const Tray = require('./modules/tray')
 const Trojan = require('./modules/trojan')
 const Notification = require('./modules/notification')
+const Toml = require('./modules/toml')
 
 app.on('ready', async () => {
   if (require('electron-squirrel-startup')) {
@@ -36,6 +37,7 @@ app.on('ready', async () => {
     Dao.register(RPCServer)
     Dao.register(Trojan)
     Dao.register(Notification)
+    Dao.register(Toml)
 
     await Dao.initAllModules()
 
