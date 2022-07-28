@@ -8,7 +8,7 @@ class RPCServer extends BaseModule {
   rpcInstances = new Set()
 
   init = async () => {
-    await this.waitModuleReady('Ports')
+    await this.waitModuleInited('Ports')
 
     const server = createServer()
     const io = new Server(server)

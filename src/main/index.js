@@ -1,6 +1,5 @@
 
 const { app } = require('electron')
-const Elog = require('electron-log')
 const Dao = require('./dao')
 const NetworkSetup = require('./modules/network-setup')
 const Store = require('./modules/store')
@@ -18,15 +17,15 @@ app.on('ready', async () => {
   } else if (!app.requestSingleInstanceLock()) {
     app.exit()
   } else {
+    require('./preload')()
+
     process.on('uncaughtException', (error) => {
       Notification.show('Error', error.message)
-      Elog.error('uncaughtException', error)
+      console.error('uncaughtException', error)
     })
 
-    Elog.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
-    Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
-
-    require('./preload')()
+    console.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
+    console.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
 
     Dao.autoInit(false)
     Dao.register(Store)

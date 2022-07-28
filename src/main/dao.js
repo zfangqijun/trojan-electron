@@ -16,7 +16,7 @@ class Dao {
       modules.map(module => Promise.resolve(module.init()).then(() => {
         module.log('%c初始化完成', 'color: green')
         modules.forEach((m) => {
-          m.emit('module/ready', module.name)
+          m.emit('module/inited', module.name)
         })
       }))
     )

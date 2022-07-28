@@ -19,8 +19,8 @@ class Trojan extends BaseModule {
   config = null
 
   init = async () => {
-    await this.waitModuleReady('Store')
-    await this.waitModuleReady('Ports')
+    await this.waitModuleInited('Store')
+    await this.waitModuleInited('Ports')
 
     const currentNode = await this.invoke('Store.getCurrentNode')
 

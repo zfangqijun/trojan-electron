@@ -9,10 +9,10 @@ const defaults = {
 class Ports extends BaseModule {
   name = 'Ports'
   /**
-     * @typedef {{ proxy: number, proxyApi: number, http:number }} PortDict
-     * @type {PortDict}
-     */
-  ports
+   * @typedef {{ proxy: number, proxyApi: number, http:number }} PortDict
+   * @type {PortDict}
+   */
+  ports = {}
 
   init = async () => {
     const proxy = await getPortPromise({
@@ -38,10 +38,10 @@ class Ports extends BaseModule {
   }
 
   /**
-     *
-     * @param {keyof PortDict} name
-     * @returns {number}
-     */
+   *
+   * @param {keyof PortDict} name
+   * @returns {number}
+   */
   getPort = (name) => {
     if (R.has(name, this.ports)) {
       return this.ports[name]

@@ -12,5 +12,6 @@ module.exports = function (logId, fileLevel = 'info', consoleLevel = 'silly') {
   log.transports.file.level = fileLevel
   log.transports.console.level = consoleLevel
   log.transports.file.fileName = 'main.log'
+
   return log.scope(logId)
 }

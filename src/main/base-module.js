@@ -42,15 +42,27 @@ class BaseModule extends EventEmitter {
     })
   }
 
-  waitModuleReady (moduleName) {
+  waitModuleInited (moduleName) {
     return new Promise((resolve, reject) => {
-      const onReady = (name) => {
+      const callback = (name) => {
         if (name === moduleName) {
           resolve()
-          this.removeListener('module/ready', onReady)
+          this.removeListener('module/inited', callback)
         }
       }
-      this.on('module/ready', onReady)
+      this.on('module/inited', callback)
+    })
+  }
+
+  waitModuleReady (moduleName) {
+    return new Promise((resolve, reject) => {
+      const callback = (name) => {
+        if (name === moduleName) {
+          resolve()
+          this.removeListener('module/ready', callback)
+        }
+      }
+      this.on('module/ready', callback)
     })
   }
 }
