@@ -10,11 +10,6 @@
 
 ## 简介
 
-> ### 为什么要开发该软件
-
-- 我试用了Surge，很喜欢，可惜太贵了
-- [Qv2ray](https://github.com/Qv2ray/Qv2ray) 停止维护
-
 ## Releases
 
 ## 开发
