@@ -8,13 +8,6 @@ const BaseModule = require('../base-module')
 const WindowManager = require('../window')
 const Paths = require('../paths')
 
-const {
-  exportRouterModeByName,
-  importRouterModeByName,
-  exportCurrentNode,
-  importCurrentNode
-} = require('../toml')
-
 class TrayMenu extends BaseModule {
   name = 'Tray'
   tray = null

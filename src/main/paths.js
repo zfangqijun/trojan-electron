@@ -1,42 +1,30 @@
 const { app } = require('electron')
 const path = require('path')
 
-const App = app.getAppPath()
+class Paths {
+  static App = app.getAppPath()
 
-const Logs = app.getPath('logs')
+  static Logs = app.getPath('logs')
 
-const UserData = app.getPath('userData')
+  static UserData = app.getPath('userData')
 
-const Downloads = app.getPath('downloads')
+  static Downloads = app.getPath('downloads')
 
-const Resource = path.resolve(App, 'resource')
+  static Resource = path.resolve(Paths.App, 'resource')
 
-const Static = path.resolve(Resource, 'static')
+  static Static = path.resolve(Paths.Resource, 'static')
 
-const TrojanGo = path.resolve(Resource, 'trojan/trojan-go')
+  static TrojanGo = path.resolve(Paths.Resource, 'trojan/trojan-go')
 
-const TrojanClientConfig = path.resolve(UserData, 'client.json')
+  static TrojanClientConfig = path.resolve(Paths.UserData, 'client.json')
 
-const TrojanApiProto = path.resolve(Resource, 'trojan/api.proto')
+  static TrojanApiProto = path.resolve(Paths.Resource, 'trojan/api.proto')
 
-const GwflistPac = path.resolve(Resource, 'gfwlist.pac')
+  static GwflistPac = path.resolve(Paths.Resource, 'gfwlist.pac')
 
-const IconTray = path.resolve(Static, 'tray/icon_16x16.png')
+  static IconTray = path.resolve(Paths.Static, 'tray/icon_16x16.png')
 
-const TrojanLogFile = path.resolve(Logs, 'trojan.log')
-
-module.exports = {
-  App,
-  Downloads,
-
-  Resource,
-  Static,
-  TrojanGo,
-  TrojanClientConfig,
-  TrojanApiProto,
-  GwflistPac,
-
-  IconTray,
-
-  TrojanLogFile
+  static TrojanLogFile = path.resolve(Paths.Logs, 'trojan.log')
 }
+
+module.exports = Paths
