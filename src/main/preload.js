@@ -5,5 +5,8 @@ module.exports = function () {
     getRandomValues: require('get-random-values')
   }
 
-  Object.assign(global.console, require('electron-log').functions)
+  const ElectronLog = require('electron-log')
+  ElectronLog.transports.file.level = 'info'
+  ElectronLog.transports.console.level = 'silly'
+  ElectronLog.transports.file.fileName = 'main.log'
 }

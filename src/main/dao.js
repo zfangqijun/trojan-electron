@@ -1,3 +1,5 @@
+const BaseModule = require('./base-module')
+const ElectronLog = require('electron-log')
 
 class Dao {
   static registered = new Map()
@@ -23,10 +25,10 @@ class Dao {
   }
 
   /**
-     *
-     * @param {string} name
-     * @param {*} module
-     */
+   *
+   * @param {string} name
+   * @param {BaseModule} module
+   */
   static async register (module) {
     if (Dao.registered.has(module.name)) {
       throw new Error(`Dao ${module.name} already registered`)
@@ -34,12 +36,12 @@ class Dao {
 
     Dao.registered.set(module.name, module)
 
-    const Elog = require('./elog')(module.name)
+    const elog = ElectronLog.scope(module.name)
 
-    if (module.on) {
-      module.on('log', Elog.info)
-      module.on('log/warn', Elog.warn)
-      module.on('log/error', Elog.error)
+    if (module instanceof BaseModule) {
+      module.on('log', elog.info)
+      module.on('log/warn', elog.warn)
+      module.on('log/error', elog.error)
       module.on('module/invoke', async (id, moduleName, methodName, ...args) => {
         try {
           const callee = Dao.getModuleMethod(moduleName, methodName)
@@ -54,7 +56,7 @@ class Dao {
 
     if (Dao.options.autoInit && module.init) {
       await module.init()
-      Elog.info('%c初始化完成', 'color: green')
+      elog.info('%c初始化完成', 'color: green')
     }
   }
 

@@ -1,7 +1,11 @@
-const EventEmitter = require('events')
+const { EventEmitter } = require('events')
 
 class BaseModule extends EventEmitter {
   invokeId = 0
+
+  init () {
+
+  }
 
   log (...args) {
     this.emit('log', ...args)

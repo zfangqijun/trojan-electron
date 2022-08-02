@@ -5,7 +5,6 @@ const path = require('path')
 const { createProxyNode } = require('../proxy-node')
 const BaseModule = require('../base-module')
 
-const WindowManager = require('../window')
 const Paths = require('../paths')
 
 class TrayMenu extends BaseModule {
@@ -45,8 +44,8 @@ class TrayMenu extends BaseModule {
   showWindow = () => {
     return new MenuItem({
       label: '显示窗口',
-      click: function () {
-        WindowManager.show('main')
+      click: async () => {
+        await this.invoke('View.show')
       }
     })
   }

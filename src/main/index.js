@@ -10,6 +10,8 @@ const Tray = require('./modules/tray')
 const Trojan = require('./modules/trojan')
 const Notification = require('./modules/notification')
 const Toml = require('./modules/toml')
+const View = require('./modules/view')
+const Elog = require('electron-log')
 
 app.on('ready', async () => {
   if (require('electron-squirrel-startup')) {
@@ -24,8 +26,10 @@ app.on('ready', async () => {
       console.error('uncaughtException', error)
     })
 
-    console.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
-    console.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
+    process.on('warning', e => console.warn(e.stack))
+
+    Elog.info(`User Data %c"${app.getPath('userData')}"`, 'color: green')
+    Elog.info(`Log %c"${app.getPath('logs')}"`, 'color: green')
 
     Dao.autoInit(false)
     Dao.register(Store)
@@ -37,6 +41,7 @@ app.on('ready', async () => {
     Dao.register(Trojan)
     Dao.register(Notification)
     Dao.register(Toml)
+    Dao.register(View)
 
     await Dao.initAllModules()
 

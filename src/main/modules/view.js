@@ -1,26 +1,27 @@
 const { BrowserWindow, BrowserView, app } = require('electron')
-const Paths = require('./paths')
+const Paths = require('../paths')
 const path = require('path')
+const BaseModule = require('../base-module')
 
 const size = {
   width: 1280,
   height: 960
 }
 
-class WindowManager {
-  static views = new Map()
-  /**
-     * @type {BrowserWindow}
-     */
-  static window = null
+class View extends BaseModule {
+  name = 'View'
 
-  static show (name = 'main') {
+  views = new Map()
+
+  window = null
+
+  show (name = 'main') {
     if (
-      WindowManager.window &&
-            WindowManager.window.isDestroyed() === false &&
-            WindowManager.window.isVisible()
+      this.window &&
+      this.window.isDestroyed() === false &&
+      this.window.isVisible()
     ) {
-      WindowManager.window.show()
+      this.window.show()
       return
     }
 
@@ -30,7 +31,7 @@ class WindowManager {
       focusable: true
     })
 
-    const view = WindowManager.getView()
+    const view = this.getView(name)
 
     window.setBrowserView(view)
     view.setBounds({ x: 0, y: 0, ...size })
@@ -44,22 +45,17 @@ class WindowManager {
       view.webContents.openDevTools({ mode: 'undocked', activate: true })
     }
 
-    WindowManager.window = window
+    this.window = window
   }
 
-  /**
-     *
-     * @param {*} name
-     * @returns {BrowserView}
-     */
-  static getView (name) {
-    if (WindowManager.views.has(name)) {
-      return WindowManager.views.get(name)
+  getView (name) {
+    if (this.views.has(name)) {
+      return this.views.get(name)
     }
     const view = new BrowserView()
-    WindowManager.views.set(name, view)
+    this.views.set(name, view)
     return view
   }
 }
 
-module.exports = WindowManager
+module.exports = new View()
