@@ -14,7 +14,8 @@
 
 ## 开发
 
-你需要先到 [Trojan-Go Releases](https://github.com/p4gefau1t/trojan-go/releases) 下载最新的可执行文件，将可执行文件trojan-go放到 /resource/trojan 目录下
+- 到 [Trojan-Go Releases](https://github.com/p4gefau1t/trojan-go/releases) 下载最新的可执行文件
+- 将可执行文件trojan-go放到 /resource/trojan 目录下
 
 安装依赖：
 
