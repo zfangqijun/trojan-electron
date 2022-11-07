@@ -5,14 +5,14 @@
   "description": "My Electron application description",
   "main": "src/main",
   "scripts": {
-    "start": "electron .",
-    "package": "pnpm build:main && pnpm build:view && pnpm copy && node electron-packager.js",
-    "dev": "vite",
-    "build:main": "vite build --config ./vite.main.config.ts",
-    "build:view": "tsc && vite build",
-    "copy": "cp -rf ./src/view/dist ./.dist/src/view",
-    "preview:view": "vite preview",
-    "standard": "standard --fix src/main/**/*.js"
+    "main:dev": "electron .",
+    "main:build": "vite build --config ./vite.main.config.ts",
+    "view:dev": "vite",
+    "view:preview": "vite preview",
+    "view:build": "tsc && vite build",
+    "copyview": "cp -rf ./src/view/dist ./.dist/src/view",
+    "packager": "pnpm main:build && pnpm view:build && pnpm copyview && node electron-packager.js",
+    "prepare": "node ./scripts/prepare.mjs"
   },
   "keywords": [],
   "author": {
@@ -58,7 +58,9 @@
     "electron-installer-zip": "^0.1.2",
     "electron-packager": "^15.5.1",
     "generate-schema": "^2.6.0",
+    "jszip": "^3.10.1",
     "mkdirp": "^1.0.4",
+    "node-fetch": "^3.2.10",
     "rollup-plugin-copy": "^3.4.0",
     "standard": "^17.0.0",
     "typescript": "^4.6.3",
