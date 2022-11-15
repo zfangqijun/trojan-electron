@@ -21,8 +21,9 @@ async function downloadLatestTrojanGo() {
     console.log('正在下载最新Trojan-Go...')
 
     const latest = await fetch('https://api.github.com/repos/p4gefau1t/trojan-go/releases/latest').then(r => r.json())
-    const assetName = `trojan - go - ${platform()} - ${arch()}.zip`
+    const assetName = `trojan-go-${platform()}-${arch()}.zip`
     const tagName = latest.tag_name;
+    console.log(latest)
     const url = `https://github.com/p4gefau1t/trojan-go/releases/download/${tagName}/${assetName}`
 
     console.log(url)
