@@ -15,7 +15,7 @@ class View extends BaseModule {
 
   window = null
 
-  show (name = 'main') {
+  show = (name = 'main') => {
     if (
       this.window &&
       this.window.isDestroyed() === false &&
@@ -48,7 +48,7 @@ class View extends BaseModule {
     this.window = window
   }
 
-  getView (name) {
+  getView = (name) => {
     if (this.views.has(name)) {
       return this.views.get(name)
     }
