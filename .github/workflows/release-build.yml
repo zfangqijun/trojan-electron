@@ -35,7 +35,7 @@ jobs:
       
 
       - name: Download trojan-go bin
-        uses: robinraju/release-downloader@v1
+        uses: robinraju/release-downloader@v1.6
         with:
           repository: p4gefau1t/trojan-go
           latest: true
