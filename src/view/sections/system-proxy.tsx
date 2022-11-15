@@ -30,15 +30,15 @@ export default function SystemProxySection() {
 
     const handleSwitchClick = async (enable: boolean) => {
         try {
-            await invoke('setSystemProxyEnable', enable)
+            await rpc.invoke('setSystemProxyEnable', enable)
             if (enable) {
-                await invoke('enableSystemProxys')
+                await rpc.invoke('enableSystemProxys')
                 notification.success({ message: '系统代理打开' })
             } else {
-                await invoke('disableSystemProxys')
+                await rpc.invoke('disableSystemProxys')
                 notification.info({ message: '系统代理关闭' })
             }
-            await invoke('trayUpdate');
+            await rpc.invoke('trayUpdate');
 
         } catch (error) {
             notification.error({ message: String(error) })
