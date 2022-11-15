@@ -51,7 +51,7 @@ jobs:
 
       
       - name: Packager
-        run: pnpm packager
+        run: pnpm exec packager
         
 
       - name: Release
