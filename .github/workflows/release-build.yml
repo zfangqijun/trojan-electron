@@ -32,19 +32,6 @@ jobs:
           echo Tag $tag_name
           git checkout $tag_name
           echo "TAG_NAME=${tag_name}" >> $GITHUB_ENV
-      
-
-      - name: Download trojan-go bin
-        uses: robinraju/release-downloader@v1
-        with:
-          repository: p4gefau1t/trojan-go
-          latest: true
-          fileName: trojan-go-darwin-amd64.zip
-          out-file-path: ./downloads
-      
-      - run: unzip -d ./downloads ./downloads/trojan-go-darwin-amd64.zip
-      - run: cp ./downloads/trojan-go ./resource/trojan
-
 
       - name: Install Node.js deps
         run: pnpm i
