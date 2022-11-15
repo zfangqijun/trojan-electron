@@ -50,8 +50,8 @@ jobs:
         run: pnpm i
 
       
-      - name: Package
-        run: pnpm package
+      - name: Packager
+        run: pnpm packager
         
 
       - name: Release
