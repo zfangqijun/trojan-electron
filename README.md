@@ -41,4 +41,5 @@ pnpm packager
 
 ## 致谢
 - [Trojan-Go](https://github.com/p4gefau1t/trojan-go)
+- [Electron](https://github.com/electron/electron)
 
