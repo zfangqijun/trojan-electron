@@ -28,7 +28,7 @@
     "@react-hook/throttle": "^2.2.0",
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.20.1",
-    "electron": "^18.2.3",
+    "electron": "23.0.0-alpha.3",
     "electron-log": "^4.4.6",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
