@@ -18,7 +18,8 @@ class RPCMethods extends BaseModule {
   }
 
   trojanRestart = async () => {
-    await this.invoke('Trojan.restart')
+    const node = await this.invoke('Store.getCurrentNode')
+    await this.invoke('Trojan.restart', node.config)
   }
 
   enableTrafficNotify = async () => {
