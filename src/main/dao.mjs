@@ -1,5 +1,5 @@
-const BaseModule = require('./base-module')
-const ElectronLog = require('electron-log')
+import BaseModule from './base-module.mjs'
+import ElectronLog from 'electron-log'
 
 class Dao {
   static registered = new Map()
@@ -77,4 +77,4 @@ class Dao {
   }
 }
 
-module.exports = Dao
+export default Dao

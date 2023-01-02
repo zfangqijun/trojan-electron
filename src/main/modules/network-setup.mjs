@@ -1,6 +1,8 @@
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
-const BaseModule = require('../base-module')
+import util from 'util'
+import childProcess from 'child_process'
+import BaseModule from '../base-module.mjs'
+
+const exec = util.promisify(childProcess.exec)
 
 class NetworkSetup extends BaseModule {
   name = 'NetworkSetup'
@@ -276,4 +278,4 @@ class NetworkSetup extends BaseModule {
   }
 }
 
-module.exports = new NetworkSetup()
+export default new NetworkSetup()

@@ -1,7 +1,7 @@
-const { BrowserWindow, BrowserView, app } = require('electron')
-const Paths = require('../paths')
-const path = require('path')
-const BaseModule = require('../base-module')
+import { BrowserWindow, BrowserView, app } from 'electron'
+import Paths from '../paths.mjs'
+import path from 'path'
+import BaseModule from '../base-module.mjs'
 
 const size = {
   width: 1280,
@@ -58,4 +58,4 @@ class View extends BaseModule {
   }
 }
 
-module.exports = new View()
+export default new View()

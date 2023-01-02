@@ -1,11 +1,11 @@
-const { Menu, Tray, MenuItem, clipboard } = require('electron')
-const fs = require('fs/promises')
-const path = require('path')
+import { Menu, Tray, MenuItem, clipboard } from 'electron'
+import fs from 'fs/promises'
+import path from 'path'
 
-const { createProxyNode } = require('../proxy-node')
-const BaseModule = require('../base-module')
+import { createProxyNode } from '../proxy-node.mjs'
+import BaseModule from '../base-module.mjs'
 
-const Paths = require('../paths')
+import Paths from '../paths.mjs'
 
 class TrayMenu extends BaseModule {
   name = 'Tray'
@@ -226,4 +226,4 @@ class TrayMenu extends BaseModule {
   }
 }
 
-module.exports = new TrayMenu()
+export default new TrayMenu()

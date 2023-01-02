@@ -1,5 +1,5 @@
-const { app } = require('electron')
-const path = require('path')
+import { app } from 'electron'
+import path from 'path'
 
 class Paths {
   static App = app.getAppPath()
@@ -27,4 +27,4 @@ class Paths {
   static TrojanLogFile = path.resolve(Paths.Logs, 'trojan.log')
 }
 
-module.exports = Paths
+export default Paths

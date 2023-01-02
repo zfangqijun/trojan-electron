@@ -1,5 +1,5 @@
-const Electron = require('electron')
-const BaseModule = require('../base-module')
+import Electron from 'electron'
+import BaseModule from '../base-module.mjs'
 
 class Notification extends BaseModule {
   name = 'Notification'
@@ -12,4 +12,4 @@ class Notification extends BaseModule {
   }
 }
 
-module.exports = new Notification()
+export default new Notification()
