@@ -1,5 +1,5 @@
-const BaseModule = require('../base-module')
-const toml = require('@iarna/toml')
+import BaseModule from '../base-module.mjs'
+import toml from '@iarna/toml'
 
 class Toml extends BaseModule {
   name = 'Toml'
@@ -18,4 +18,4 @@ class Toml extends BaseModule {
   }
 }
 
-module.exports = new Toml()
+export default new Toml()

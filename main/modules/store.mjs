@@ -1,7 +1,10 @@
 /// <reference path="../../common/types/electron-store.d.ts"/>
 
-const ElectronStore = require('electron-store')
-const BaseModule = require('../base-module')
+import ElectronStore from 'electron-store'
+import BaseModule from '../base-module.mjs'
+
+import defaultsJSON from '../../common/store-defaults.json' assert { type: 'json'}
+import schemaJSON from '../../common/schema.json' assert { type: 'json' }
 
 class Store extends BaseModule {
   name = 'Store'
@@ -11,8 +14,8 @@ class Store extends BaseModule {
     /**
      * @type {ElectronStoreState}
      */
-    defaults: require('../../common/store-defaults.json'),
-    schema: require('../../common/schema.json')
+    defaults: defaultsJSON,
+    schema: schemaJSON
   })
 
   init = () => {
@@ -181,4 +184,4 @@ class Store extends BaseModule {
   }
 }
 
-module.exports = new Store()
+export default new Store()

@@ -1,5 +1,5 @@
-const { getPortPromise } = require('portfinder')
-const BaseModule = require('../base-module')
+import { getPortPromise } from 'portfinder'
+import BaseModule from '../base-module.mjs'
 
 const defaults = {
   proxy: 2188,
@@ -51,4 +51,4 @@ class Ports extends BaseModule {
   }
 }
 
-module.exports = new Ports()
+export default new Ports()

@@ -1,17 +1,17 @@
 /* eslint-disable camelcase */
-const BaseModule = require('../base-module')
+import BaseModule from '../base-module.mjs'
 
-const { spawn } = require('child_process')
-const fs = require('fs/promises')
-const { promisify } = require('util')
-const protoLoader = require('@grpc/proto-loader')
-const grpc = require('@grpc/grpc-js')
+import { spawn } from 'child_process'
+import fs from 'fs/promises'
+import { promisify } from 'util'
+import protoLoader from '@grpc/proto-loader'
+import grpc from '@grpc/grpc-js'
 
-const template = require('./proxy/client-config-template.json')
+import template from './proxy/client-config-template.json' assert { type: 'json' }
 
-const Paths = require('../paths')
+import Paths from '../paths.mjs'
 
-const isValidDomain = require('is-valid-domain')
+import isValidDomain from 'is-valid-domain'
 
 class Trojan extends BaseModule {
   name = 'Trojan'
@@ -243,4 +243,4 @@ const getServiceClientConstructor = (function () {
   }
 }())
 
-module.exports = new Trojan()
+export default new Trojan()

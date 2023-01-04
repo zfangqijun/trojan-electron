@@ -1,7 +1,7 @@
-const { BrowserWindow, BrowserView, app } = require('electron')
-const Paths = require('../paths')
-const path = require('path')
-const BaseModule = require('../base-module')
+import { BrowserWindow, BrowserView, app } from 'electron'
+import Paths from '../paths.mjs'
+import path from 'path'
+import BaseModule from '../base-module.mjs'
 
 const size = {
   width: 1280,
@@ -38,7 +38,7 @@ class View extends BaseModule {
     view.setAutoResize({ width: true, height: true })
 
     if (app.isPackaged) {
-      view.webContents.loadFile(path.resolve(Paths.App, 'src/view/index.html'))
+      view.webContents.loadFile(path.resolve(Paths.App, 'view/index.html'))
       // view.webContents.openDevTools({ mode: 'undocked', activate: true });
     } else {
       view.webContents.loadURL('http://localhost:3000/')
@@ -58,4 +58,4 @@ class View extends BaseModule {
   }
 }
 
-module.exports = new View()
+export default new View()

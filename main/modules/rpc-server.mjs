@@ -1,7 +1,7 @@
-const { Server } = require('socket.io')
-const { RPC } = require('jsonrpcv2')
-const { createServer } = require('http')
-const BaseModule = require('../base-module')
+import { Server } from 'socket.io'
+import { RPC } from 'jsonrpcv2'
+import { createServer } from 'http'
+import BaseModule from '../base-module.mjs'
 
 class RPCServer extends BaseModule {
   name = 'RPCServer'
@@ -81,4 +81,4 @@ class RPCServer extends BaseModule {
   }
 }
 
-module.exports = new RPCServer()
+export default new RPCServer()

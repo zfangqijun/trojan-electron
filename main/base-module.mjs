@@ -1,4 +1,4 @@
-const { EventEmitter } = require('events')
+import { EventEmitter } from 'events'
 
 class BaseModule extends EventEmitter {
   invokeId = 0
@@ -71,4 +71,4 @@ class BaseModule extends EventEmitter {
   }
 }
 
-module.exports = BaseModule
+export default BaseModule

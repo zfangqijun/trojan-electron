@@ -1,5 +1,5 @@
-const { createProxyNode } = require('../proxy-node')
-const BaseModule = require('../base-module')
+import { createProxyNode } from '../proxy-node.mjs'
+import BaseModule from '../base-module.mjs'
 
 class RPCMethods extends BaseModule {
   name = 'RPCMethods'
@@ -101,4 +101,4 @@ class RPCMethods extends BaseModule {
   }
 }
 
-module.exports = new RPCMethods()
+export default new RPCMethods()

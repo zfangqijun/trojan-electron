@@ -1,6 +1,6 @@
 /// <reference path="../../common/types/trojan-config.d.ts" />
 
-const uuid = require('uuid')
+import { v4 } from 'uuid'
 
 /**
  *
@@ -15,11 +15,11 @@ function createProxyNode (options) {
   } = options
 
   return {
-    uuid: uuid.v4(),
+    uuid: v4(),
     type: type || 'trojan',
     name: name || '新节点',
     config: config || null
   }
 }
 
-module.exports = { createProxyNode }
+export { createProxyNode }
