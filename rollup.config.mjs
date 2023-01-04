@@ -5,14 +5,14 @@ import copy from 'rollup-plugin-copy'
 import terser from '@rollup/plugin-terser';
 
 export default {
-    input: 'src/main/main.mjs',
+    input: 'main/main.mjs',
     output: [
         {
-            file: '.dist/src/main/index.mjs',
+            file: '.dist/main/index.mjs',
             format: 'es',
         },
         {
-            file: '.dist/src/main/index.js',
+            file: '.dist/main/index.js',
             format: 'cjs',
         }
     ],

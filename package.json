@@ -3,14 +3,14 @@
   "productName": "trojan-electron",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": "src/main",
+  "main": "main",
   "scripts": {
     "dev": "electron .",
     "build": "rollup -c rollup.config.mjs",
     "dev:view": "vite",
     "preview:view": "vite preview",
     "build:view": "tsc && vite build",
-    "cpview": "cp -rf ./src/view/dist ./.dist/src/view",
+    "cpview": "cp -rf ./view/dist ./.dist/view",
     "packager": "pnpm build && pnpm build:view && pnpm cpview && node electron-packager.js",
     "prepare": "node ./scripts/prepare.mjs"
   },

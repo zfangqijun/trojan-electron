@@ -38,7 +38,7 @@ class View extends BaseModule {
     view.setAutoResize({ width: true, height: true })
 
     if (app.isPackaged) {
-      view.webContents.loadFile(path.resolve(Paths.App, 'src/view/index.html'))
+      view.webContents.loadFile(path.resolve(Paths.App, 'view/index.html'))
       // view.webContents.openDevTools({ mode: 'undocked', activate: true });
     } else {
       view.webContents.loadURL('http://localhost:3000/')
