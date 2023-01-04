@@ -14,6 +14,7 @@ export default {
         {
             file: '.dist/main/index.js',
             format: 'cjs',
+            plugins: [terser()]
         }
     ],
     external: [
