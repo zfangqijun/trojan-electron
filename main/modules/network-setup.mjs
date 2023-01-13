@@ -230,6 +230,7 @@ class NetworkSetup extends BaseModule {
     return this.exec(cmd)
       .then(R.prop('stdout'))
       .then(R.match(/Hardware Port: [\S ]+, Device: en/g))
+      .then(R.reject(R.includes('PAN')))
       // 没有匹配到en开头的Hardware Port
       .then(R.when(R.isNil, () => []))
       .then(R.map(R.replace(/Hardware Port: |, Device: en/g, '')))
