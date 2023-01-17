@@ -28,7 +28,9 @@ class TrayMenu extends BaseModule {
       await this.proxyNodeOptions(),
       await this.importFromURL(),
       _____,
-      await this.tomls(),
+      await this.devTool(),
+      // _____,
+      // await this.tomls(),
       await this.quit()
     ].flat())
 
@@ -175,6 +177,60 @@ class TrayMenu extends BaseModule {
           this.invoke('Notification.show', '导入代理配置', error.message)
         }
       }
+    })
+  }
+
+  devTool = () => {
+    const copyNpmCmd = async (cliName) => {
+      const port = await this.invoke('Ports.getPort', 'proxy')
+
+      const proxyUrl = `http://127.0.0.1:${port}`
+
+      clipboard.writeText([
+        `${cliName} config set proxy ${proxyUrl}`,
+        `${cliName} config set https-proxy ${proxyUrl}`,
+      ].join(' && '))
+    }
+
+    const submenu = [
+      new MenuItem({
+        type: 'normal',
+        label: 'npm代理',
+        click: async () => {
+          await copyNpmCmd('npm');
+        }
+      }),
+      new MenuItem({
+        type: 'normal',
+        label: 'yarn代理',
+        click: async () => {
+          await copyNpmCmd('yarn');
+        }
+      }),
+      new MenuItem({
+        type: 'normal',
+        label: 'pnpm代理',
+        click: async () => {
+          await copyNpmCmd('pnpm');
+        }
+      }),
+      new MenuItem({
+        type: 'normal',
+        label: '终端代理',
+        click: async () => {
+          const port = await this.invoke('Ports.getPort', 'proxy')
+
+          clipboard.writeText([
+            `export http_proxy=http://127.0.0.1:${port}`,
+            `export https_proxy=http://127.0.0.1:${port}`,
+          ].join(' && '))
+        }
+      })
+    ]
+
+    return new MenuItem({
+      label: '代理命令',
+      submenu: submenu
     })
   }
 
