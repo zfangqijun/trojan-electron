@@ -31,7 +31,7 @@ class View extends BaseModule {
       focusable: true
     })
 
-    const view = this.getView(name)
+    const view = new BrowserView()
 
     window.setBrowserView(view)
     view.setBounds({ x: 0, y: 0, ...size })
@@ -46,15 +46,6 @@ class View extends BaseModule {
     }
 
     this.window = window
-  }
-
-  getView = (name) => {
-    if (this.views.has(name)) {
-      return this.views.get(name)
-    }
-    const view = new BrowserView()
-    this.views.set(name, view)
-    return view
   }
 }
 
